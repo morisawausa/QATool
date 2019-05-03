@@ -18,8 +18,8 @@ class OCC_QATool():
 		print "constructor called"
 		self.application = OCC_QATaskListView()
 		task = CompareGlyphNames()
-        task.details()
-
+		print(task.details())
+		task.run(None, None)
 
 
 if __name__ == '__main__':
