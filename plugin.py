@@ -12,9 +12,9 @@ from vanilla import *
 import traceback
 
 from tasklistview import OCC_QATaskListView
+from scripts.compare_glyph_names import run
 
 class OCC_QATool():
-
 
 	def __init__(self):
 		print "constructor called"
