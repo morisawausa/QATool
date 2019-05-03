@@ -3,12 +3,16 @@ import objc
 from GlyphsApp import *
 from vanilla import *
 
+# from profile import QAProfile
+from qaprofile import QAProfile
+from qapool import QAPool
+
 class OCC_QATaskListView():
 	def __init__(self):
 		print "QA Task List View constructor called"
-		self.pool = Null
-		self.profile = Null
-		self.selected_task = Null
+		self.profile = QAProfile()
+		self.pool = QAPool()
+		self.selected_task = None
 
 	def run_profile(self):
 		"""looks at current profile and runs all tasks"""
