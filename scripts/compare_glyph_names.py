@@ -4,14 +4,14 @@ from GlyphsApp import *
 from GlyphsApp.plugins import *
 from vanilla import *
 
-from ..models.task import QATask
+from abstracts.task import QATask
 
 class CompareGlyphNames(QATask):
     """Goes through all glyph names and checks against master list.
     Colors glyphs not present in the list orange, and outputs any missing glyph names in the macros panel.
     """
 
-    def details():
+    def details( self ):
         return {
             "name": "Compare Glyph Names",
             "version": "1.0.0",
