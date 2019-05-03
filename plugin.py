@@ -12,13 +12,15 @@ from vanilla import *
 import traceback
 
 from tasklistview import OCC_QATaskListView
-from scripts.compare_glyph_names import run
+from models.task import QATask
 
 class OCC_QATool():
 
 	def __init__(self):
 		print "constructor called"
 		self.application = OCC_QATaskListView()
+		task = QATask()
+		print task.details()
 
 
 if __name__ == '__main__':

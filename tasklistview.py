@@ -10,7 +10,6 @@ from taskview import OCC_QATaskView
 
 class OCC_QATaskListView():
 
-
 	def __init__(self):
 		print "QA Task List View constructor called"
 		self.profile = QAProfile()
