@@ -7,9 +7,9 @@ from vanilla import *
 from abstracts.task import QATask
 
 class CompareGlyphNames(QATask):
-    """Goes through all glyph names and checks against master list.
-    Colors glyphs not present in the list orange, and outputs any missing glyph names in the macros panel.
-    """
+	"""Goes through all glyph names and checks against master list.
+	Colors glyphs not present in the list orange, and outputs any missing glyph names in the macros panel.
+	"""
 
 	def details( self ):
 		return {
@@ -30,7 +30,9 @@ class CompareGlyphNames(QATask):
 				missingList.remove(name)
 			else:
 				thisGlyph.color = 1
-			print name, "is not a standard name"
-			# orange if glyph name is not on master list
+				report.add(name, name + " is not a standard name", passed=False)
 
-		print len(missingList), " missing glyphs:", missingList
+		if len( missingList ) > 0:
+			report.add( "Missing " + str(len(missingList)), str(missingList), passed=False )
+		else:
+			report.add( "No missing glyphs!", "All glyphs are in the typeface", passed=True )

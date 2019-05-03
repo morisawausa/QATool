@@ -3,8 +3,10 @@ import objc
 from GlyphsApp import *
 from vanilla import *
 
+from report import QAReport
+
 class QATask():
-	
+
 	def __init__(self):
 		print "QATask constructor called"
 		self.report = QAReport(self)
@@ -26,7 +28,7 @@ class QATask():
 
 
 	def start(self, parameters):
-		"""Calls run method and stores results in QAReport. 
+		"""Calls run method and stores results in QAReport.
 		Returns QAReport for rendering."""
 		self.report = QAReport(self)
 		self.run(parameters, self.report)
@@ -37,4 +39,3 @@ class QATask():
 	def run(self, parameters, report):
 		"""Implementers should override this method to run test"""
 		pass
-

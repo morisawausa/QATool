@@ -19,7 +19,9 @@ class OCC_QATool():
 		self.application = OCC_QATaskListView()
 		task = CompareGlyphNames()
 		print(task.details())
-		task.run(None, None)
+		report = task.start(dict())
+
+		print( report )
 
 
 if __name__ == '__main__':

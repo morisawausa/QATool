@@ -34,9 +34,9 @@ class QAReport():
 		"""
 		for line in self.lines:
 			if line.passed is not None:
-				
+
 				self.passed = self.passed and line.passed
-				
+
 				if line.passed:
 					self.number_passed +=1
 				else:
@@ -44,17 +44,17 @@ class QAReport():
 
 		return self
 
-	def print(self):
+	def __repr__(self):
+		output = ""
 		for line in self.lines:
 			if line.passed is None:
-				output = "Note"
+				output += "Note"
 			elif line.passed is True:
-				output = "Yaas"
+				output += "Yaas"
 			else:
-				output = "Oops"
-			output += '\t' + line.header + '\t' + line.desc + '\n'
+				output += "Oops"
+			output += '\t\t\t' + line.header + '\t\t\t' + line.desc + '\n'
 
-		print output
-		return self
+		print( output )
 
-
+		return output
