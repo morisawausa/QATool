@@ -6,7 +6,7 @@ from vanilla import *
 
 from abstracts.task import QATask
 
-class CompareGlyphNames(QATask):
+class Script(QATask):
 	"""Goes through all glyph names and checks against master list.
 	Colors glyphs not present in the list orange, and outputs any missing glyph names in the macros panel.
 	"""

@@ -18,6 +18,8 @@ class OCC_QATaskListView():
 		self.task_list = list()
 		self.task_view = OCC_QATaskView()
 
+		self.pool.update_tasks()
+
 
 	def run_profile(self):
 		"""looks at current profile and runs all tasks"""
@@ -50,4 +52,3 @@ class OCC_QATaskListView():
 
 	def deactivate_atask(self, task):
 		pass
-
