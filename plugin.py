@@ -4,4 +4,12 @@ __doc__="""
 Occupant QA Tool
 """
 
-print "work!"
+from views.tasklistview import OCC_QATaskListView
+
+class OCC_QATool():
+	def __init__(self):
+		print "constructor called"
+		self.application = OCC_QATaskListView()
+
+if __name__ == '__main__':
+	tool = OCC_QATool()
