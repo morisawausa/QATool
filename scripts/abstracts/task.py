@@ -7,36 +7,34 @@ class QATask():
 	
 	def __init__(self):
 		print "QATask constructor called"
-		self.report = None
+		self.report = QAReport(self)
 
 
 	def details(self):
-		"""returns default task details. Implementers should override
+		"""Returns default task details. Implementers should override
 		this with specifics of the test"""
 		return {
-			"name": "Default Taks Name",
+			"name": "Default Task Name",
 			"version": "1.0.0",
 			"description": "This is the default description"
 		}
 
 
 	def parameters(self):
-		"""returns default task parameters."""
+		"""Returns default task parameters."""
 		return dict()
 
 
-	def start(self):
-		"""calls run method and stores results in QAReport. 
+	def start(self, parameters):
+		"""Calls run method and stores results in QAReport. 
 		Returns QAReport for rendering."""
-		pass
+		self.report = QAReport(self)
+		self.run(parameters, self.report)
+		self.report.finalize()
+		return self.report
 
 
 	def run(self, parameters, report):
 		"""Implementers should override this method to run test"""
-		pass
-
-
-	def finalize(self):
-		"""Update QAReport after running test and return QAReport"""
 		pass
 
