@@ -7,22 +7,20 @@ import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 from vanilla import *
+from vanilla.test.testAll import Test
 import traceback
 
 from tasklistview import OCC_QATaskListView
-from scripts.compare_glyph_names import CompareGlyphNames
+
 
 class OCC_QATool():
 
 	def __init__(self):
-		print "constructor called"
+		print "Welcome to the Occupant QA Tool :)"
+		# Test()
+
 		self.application = OCC_QATaskListView()
-		task = CompareGlyphNames()
-		print(task.details())
-		report = task.start(dict())
-
-		print( report )
-
+		self.application.development = True
 
 if __name__ == '__main__':
 	tool = OCC_QATool()

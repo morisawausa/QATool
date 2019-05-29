@@ -3,23 +3,37 @@ import objc
 from GlyphsApp import *
 from vanilla import *
 
+
 class QAProfile():
 	"""The QAProfile class manages which tasks are activated 
 	and which are inactive, as well as defining custom 
 	parameters for the typeface."""
 
-	def __init__(self):
+	def __init__(self, pool):
 		"""Set up our dictionary of task parameters and our 
 		task ordering later use. """
-		print "QAProfile constructor called"
-		self.tasks = dict()
-		self.task_order = list()
+
+		self.profile_tasks = dict()
+
+		for task in pool.tasks:
+			self.profile_tasks[task] = {
+				'Script' : pool.tasks[task],
+				'State' : False,
+				'Parameters' : dict()
+			}
+
+		print self.profile_tasks
 
 
 	def run(self, pool):
 		"""Given a pool of available tasks, run the tasks 
-		specified in self.tasks and report the result. """
-		return list(), list(), list()
+		specified in pool and report the result. """
+		# print pool
+
+		
+
+		# render_task_report(self):
+		# return list(), list(), list()
 
 
 	def save(self):
@@ -30,15 +44,13 @@ class QAProfile():
 
 	def load(self):
 		"""Load the parameters for the specified QATasks to 
-		from the current font's custom oaraneters fields."""
+		from the current font's customParameters fields."""
 		return self
 
+	def toggle(self, task_name):
+		
+		self.profile_tasks[ task_name ]['State'] = not self.profile_tasks[ task_name ]['State']
 
-	def activate(self, task_name):
-		"""Mark the given task as active"""
+		print self.profile_tasks
 		return self
 
-
-	def deactivate(self, task_name):
-		"""Mark the given task as inactive"""
-		return self

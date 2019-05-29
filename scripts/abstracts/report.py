@@ -14,7 +14,7 @@ class QAReport():
 		self.number_failed = 0
 		self.task = task
 		self.lines = list()
-
+		
 
 	def add(self, header, desc, passed=None):
 		"""Adds line of task test information to report.
@@ -25,6 +25,7 @@ class QAReport():
 		line = QALine(passed, header, desc)
 		self.lines.append(line)
 		return self
+
 
 	def finalize(self):
 		"""Update QAReport after running test and return QAReport
@@ -45,16 +46,14 @@ class QAReport():
 		return self
 
 	def __repr__(self):
-		output = ""
+		output = self.task.details()['name'] +'\n\n'
 		for line in self.lines:
 			if line.passed is None:
 				output += "Note"
 			elif line.passed is True:
-				output += "Yaas"
+				output += "✓"
 			else:
-				output += "Oops"
-			output += '\t\t\t' + line.header + '\t\t\t' + line.desc + '\n'
-
-		print( output )
+				output += "x"
+			output += '\t\t' + line.header + '\t\t\t' + line.desc + '\n'
 
 		return output
