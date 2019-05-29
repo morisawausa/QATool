@@ -12,7 +12,6 @@ import traceback
 
 from tasklistview import OCC_QATaskListView
 
-
 class OCC_QATool():
 
 	def __init__(self):

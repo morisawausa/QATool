@@ -21,6 +21,8 @@ class OCC_QATaskListView():
 
 		self.task_view = OCC_QATaskView()
 
+		self.pool.update_tasks()
+
 
 	def run_profile(self, sender):
 		"""looks at current profile and runs all tasks"""
@@ -67,7 +69,6 @@ class OCC_QATaskListView():
 		pass
 
 
-
 	def toggle(self, sender):
 		"""when clicking checkbox, toggle active state of selected task"""
 		self.selection(sender)
@@ -80,4 +81,5 @@ class OCC_QATaskListView():
 		selected = selected[0] # only deal with single selections
 		self.selected_task_name = self.items[selected]['Test'] # gets name of task
 		self.selected_task = self.pool.tasks[self.selected_task_name]
+
 
