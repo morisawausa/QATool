@@ -8,7 +8,6 @@ from line import QALine
 class QAReport():
 
 	def __init__(self, task):
-		print "QAReport constructor called"
 		self.passed = None
 		self.number_passed = 0
 		self.number_failed = 0
@@ -54,6 +53,6 @@ class QAReport():
 				output += "✓"
 			else:
 				output += "x"
-			output += '\t\t' + line.header + '\t\t\t' + line.desc + '\n'
+			output += '\t\t' + line.header + '\n\t\t' + line.desc + '\n\n'
 
 		return output
