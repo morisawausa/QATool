@@ -16,7 +16,7 @@ class OCC_QATool():
 
 	def __init__(self):
 		print "Welcome to the Occupant QA Tool :)"
-
+		# Test()
 		self.application = OCC_QATaskListView()
 
 if __name__ == '__main__':

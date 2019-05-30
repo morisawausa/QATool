@@ -8,7 +8,6 @@ from report import QAReport
 class QATask():
 
 	def __init__(self):
-		print "QATask constructor called"
 		self.report = QAReport(self)
 
 
@@ -31,7 +30,9 @@ class QATask():
 		"""Calls run method and stores results in QAReport.
 		Returns QAReport for rendering."""
 		self.report = QAReport(self)
+
 		self.run(parameters, self.report)
+		
 		self.report.finalize()
 		return self.report
 

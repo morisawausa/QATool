@@ -5,6 +5,7 @@ from vanilla import *
 import os
 import importlib
 
+from taskview import OCC_QATaskView
 
 class QAProfile():
 	"""The QAProfile class manages which tasks are activated 
@@ -12,10 +13,10 @@ class QAProfile():
 	parameters for the typeface."""
 
 	def __init__(self):
-		"""Set up our dictionary of tasks for later use. """
+		"""Set up our dictionary of tasks that stores the tasks, its states, and parameters"""
 		self.tasks = dict()
 		self.load_scripts()
-		print self.tasks
+		self.task_view = OCC_QATaskView()
 
 
 	def load_scripts(self):
@@ -34,13 +35,13 @@ class QAProfile():
 		return self
 
 
-	def run(self, pool):
+	def run(self):
 		"""Given a pool of available tasks, run the tasks 
-		specified in pool and report the result. """
-		# print pool		
-
-		# render_task_report(self):
-		# return list(), list(), list()
+		specified in pool and report the result. """	
+		for task in self.tasks:
+			task_obj = self.tasks[task]
+			if task_obj['State'] is True:
+				self.task_view.render_task_report(self.tasks[task]['Script'])
 
 
 	def save(self):
@@ -54,8 +55,10 @@ class QAProfile():
 		from the current font's customParameters fields."""
 		return self
 
+
 	def toggle(self, task_name):
 		"""Toggle the active state of a given task"""
 		self.tasks[ task_name ]['State'] = not self.tasks[ task_name ]['State']
+		print 'toggle state', task_name
 		return self
 

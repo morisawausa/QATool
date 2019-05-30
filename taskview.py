@@ -6,10 +6,8 @@ from vanilla import *
 class OCC_QATaskView():
 
 	def __init__(self):
-		print "QATaskView constructor called"
 		self.task = None
 		self.report = list()
-		self.updating = False
 
 
 	def set_task(self, task):
@@ -17,14 +15,20 @@ class OCC_QATaskView():
 		self.task = task
 		return self
 
+
 	def render(self):
-		return "\n".join(['%s : %s' % (key, value) for (key, value) in self.task.details().items()])
+		return self.task.details()['name'] + " (v" + self.task.details()['version'] + ")\n" + self.task.details()['description']
+
+
+	def render_task_parameters(self):
+		return self.task.parameters()
 
 
 	def render_task_report(self, task):
-		self.report = task.start(dict())
-		print "\n", self.report
+		font = Glyphs.font
+		name = font.familyName
+		self.report = task.start(task.parameters())
+		print name, "\n+++++++++++++++++++++++\n", self.report
 		return self
 
-	def render_task_parameters(self):
-		return self
+
