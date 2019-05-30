@@ -23,7 +23,7 @@ class OCC_QATaskView():
 
 	def render_task_report(self, task):
 		self.report = task.start(dict())
-		print "-------------------------------------------------------","\n", self.report
+		print "\n", self.report
 		return self
 
 	def render_task_parameters(self):

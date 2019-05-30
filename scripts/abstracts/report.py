@@ -50,9 +50,9 @@ class QAReport():
 			if line.passed is None:
 				output += "Note"
 			elif line.passed is True:
-				output += "✓"
+				output += "passed"
 			else:
-				output += "x"
-			output += '\t\t' + line.header + '\n\t\t' + line.desc + '\n\n'
+				output += "failed"
+			output += '\t\t\t' + line.header + '\n\t\t\t' + line.desc + '\n\n'
 
 		return output
