@@ -18,13 +18,14 @@ class OCC_QATaskListView():
 
 	def render(self):
 		"""draw entire application"""
-		self.w = Window((500, 700), "Occupant QA")
+		self.w = Window((500, 640), "Occupant QA")
 		self.w.runAllButton = SquareButton((10, -50, -10, 40), "Run Selected Tests", callback=self.run_profile)
 
-		# setup tasks to display in the list view
-		self.items = list() 
-		for key in self.profile.tasks.keys():
-			self.items.append({'Test': key})
+		# setup tasks to display in the list view per the task order
+		self.items = list()
+		
+		for test in self.profile.task_order:
+			self.items.append({'Test': test})
 
 		columnDescriptions = [
 			{"title": "Select", "cell": CheckBoxListCell(title=None), "width": 40},
@@ -42,7 +43,7 @@ class OCC_QATaskListView():
 
 
 		# set up parameter placeholders (maximum 3)
-		self.w.params = Box((10, 480, -10, 110), "Parameters")
+		self.w.params = Box((10, 470, -10, 110), "Parameters")
 
 		self.w.params.param0 = Group((5,5,-5,20))
 		self.w.params.param0.input = EditText((0, 0, 60, -0), "pts", callback=self.paramCallback)

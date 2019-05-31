@@ -44,15 +44,19 @@ class QAReport():
 
 		return self
 
+	def node(self, GSnode):
+		"""outputs GS Node into human-readable point coordinates"""
+		return "(" + str(GSnode.x) + "," + str(GSnode.y) + ")"
+
 	def __repr__(self):
 		output = self.task.details()['name'] +'\n\n'
 		for line in self.lines:
-			if line.passed is None:
-				output += "Note"
-			elif line.passed is True:
-				output += "YAS"
-			else:
-				output += "OOPS"
-			output += '\t\t' + line.header + '\n' + line.desc + '\n\n'
+			# if line.passed is None:
+			# 	output += "* "
+			# # elif line.passed is True:
+			# # 	output += "YAS\t\t"
+			# # else:
+			# 	output += "OOPS\t\t"
+			output += line.header + line.desc + '\n'
 
 		return output

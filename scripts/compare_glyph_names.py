@@ -13,7 +13,7 @@ class Script(QATask):
 
 	def details( self ):
 		return {
-			"name": "Compare Glyph Names",
+			"name": "Compare glyph names",
 			"version": "1.0.0",
 			"description": "Goes through all glyph names and checks against master list. Colors glyphs not present in the list orange, and outputs any missing glyph names in the macros panel."
 		}

@@ -15,15 +15,18 @@ class QAProfile():
 	def __init__(self):
 		"""Set up our dictionary of tasks that stores the tasks, its states, and parameters"""
 		self.tasks = dict()
+		self.task_order = list()
 		self.load_scripts()
 		self.task_view = OCC_QATaskView()
 
 
 	def load_scripts(self):
-		"""Load .py files in the 'scripts' directory as a series of QATasks. TODO: Records an error 
-		if any of the QATasks are missing a name"""
+		"""Load .py files in the 'scripts' directory as a series of QATasks.
+		Uses the test_order.txt file to determine the task order. TODO: Records an error 
+		if any of the QATasks are missing a name or does not match"""
 		files = os.listdir('scripts')
 
+		# load all .py files
 		for file in files:
 			if file.endswith(".py") and "__init__" not in file:
 				mod = importlib.import_module( 'scripts.' + file.split('.')[0] )
@@ -32,6 +35,14 @@ class QAProfile():
 				task_name = test.details()['name']
 				self.tasks[task_name] = dict([('Script',test), ('State', False), ('Parameters', dict())])
 				# append script to list of tasks
+		
+
+		# read in script order file
+		f = open('scripts/test_order.txt', 'r')
+		order = f.read().splitlines()
+		f.close()
+		self.task_order = order
+
 		return self
 
 
