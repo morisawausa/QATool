@@ -24,7 +24,7 @@ class Script(QATask):
 
 	def run(self, parameters, report):
 		for m in self.font.masters:
-			report.add( "\n\n"+m.name, "\n---------------------------------------------", passed=None )
+			report.add( "\n\n\n"+m.name, "\n---------------------------------------------", passed=None )
 			previous_glyph=""
 			for g in self.font.glyphs:
 				layer =  g.layers[m.id]
@@ -33,46 +33,28 @@ class Script(QATask):
 				for path in layer.paths:
 					points = []
 					for node in path.nodes:
-						if node.type == 'line' or node.type == 'curve':
-							points.append(node)
+						points.append(node)
 				
 					for i, val in enumerate(points):
 						point = points[i]
-						if (i==0):
+						if i==0:
 							prev_point = points[0]
 						else:
 							prev_point = points[i-1]
 
-						diffX = abs(point.x - prev_point.x)
-						diffY = abs(point.y - prev_point.y)
-					
-						if(diffX==1 or diffY==1):
-							if (g != previous_glyph): # avoid repeating glyph name for each point
-								report.add( "\n*", g.name, passed=None )
-								previous_glyph = g
-							if (diffX==1):
-								report.add( "x\t", "check horizontal alignment between " + report.node(point) + " and " + report.node(prev_point), passed=False )
-							if (diffY==1):
-								report.add( "y\t", "check vertical alignment between " + report.node(point) + " and " + report.node(prev_point), passed=False )
+						if not (point.type == 'offcurve' and prev_point.type == 'offcurve'):
+							# ignore offcurve to offcurve 
+							diffX = abs(point.x - prev_point.x)
+							diffY = abs(point.y - prev_point.y)
+						
+							if diffX==1 or diffY==1:
+								if g != previous_glyph: # avoid repeating glyph name for each point
+									report.add( "\n*", g.name, passed=None )
+									previous_glyph = g
+								if diffX==1:
+									report.add( "x\t", "check horizontal alignment between " + report.node(point) + " and " + report.node(prev_point), passed=False )
+								if diffY==1:
+									report.add( "y\t", "check vertical alignment between " + report.node(point) + " and " + report.node(prev_point), passed=False )
 
-							
-
-
-							# difference = node.y - nearest
-							# if (abs(difference) < padding):
-							# 	if (g != previous_glyph):
-							# 		report.add( "\n*", g.name, passed=None )
-							# 		previous_glyph = g
-
-							# 	shift = ""
-							# 	point = "[" + str(node.x) + "," + str(node.y) + "]"
-								
-							# 	def render(shift):
-							# 		return "".join([" is ", shift, " the ", metrics[nearest], " by ", str(abs(difference))])
-								
-							# 	if difference < 0:
-							# 		report.add(point, render('below'), passed=False)
-							# 	else:
-							# 		report.add(point, render('above'), passed=False)
 								
 
