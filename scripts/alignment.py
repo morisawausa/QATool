@@ -12,7 +12,7 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "Vertical alignment",
+			"name": "Vertical metrics checker",
 			"version": "1.0.0",
 			"description": "For all masters of selected font, checks if any point falls within the error threshold. Checks against metrics based off of reference glyphs as follows: baseline (H), baseline overshoot (O), ascender (h), descender(p), capheight(H), capheight overshoot (O), xheight (u), xheight overshoot (o)."
 			}
@@ -56,13 +56,13 @@ class Script(QATask):
 		metrics = self.setMetrics()
 		metrics_output = '\n'.join(['%s = %s' % (value, key) for (key, value) in metrics.items()])
 
-		report.add( "Alignment metrics:\n", metrics_output, passed=None )
+		report.add( "Alignment metrics:\n" + metrics_output, passed=None )
 
 		padding = parameters['Zone Threshold']
-		report.add( "\nAlignment buffer: ", str(padding), passed=None )
+		report.add( "\nAlignment buffer: " + str(padding), passed=None )
 
 		for m in self.font.masters:
-			report.add( "\n\n"+m.name, "\n---------------------------------------------", passed=None )
+			report.add( "\n\n\n---------------------------------------------\n" + m.name + "\n---------------------------------------------", passed=None )
 			previous_glyph=""
 			for g in self.font.glyphs:
 				layer =  g.layers[m.id]
@@ -76,7 +76,7 @@ class Script(QATask):
 								difference = node.y - nearest
 								if (abs(difference) < padding):
 									if (g != previous_glyph): # avoid repeating glyph name for each point
-										report.add( "\n*", g.name, passed=None )
+										report.add( "\n*" + g.name, passed=None )
 										previous_glyph = g
 
 									shift = ""
@@ -85,7 +85,7 @@ class Script(QATask):
 										return "".join([" is ", shift, " the ", metrics[nearest], " by ", str(abs(difference))])
 									
 									if difference < 0:
-										report.add(report.node(node), note('below'), passed=False)
+										report.add(report.node(node) + note('below'), passed=False)
 									else:
-										report.add(report.node(node), note('above'), passed=False)
+										report.add(report.node(node) + note('above'), passed=False)
 

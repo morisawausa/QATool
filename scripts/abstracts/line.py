@@ -6,7 +6,6 @@ from vanilla import *
 
 class QALine():
 
-	def __init__(self, passed, header, desc):
+	def __init__(self, passed, desc):
 		self.passed = passed
-		self.header = header
 		self.desc = desc

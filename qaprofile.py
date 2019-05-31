@@ -70,6 +70,5 @@ class QAProfile():
 	def toggle(self, task_name):
 		"""Toggle the active state of a given task"""
 		self.tasks[ task_name ]['State'] = not self.tasks[ task_name ]['State']
-		print 'toggle state', task_name
 		return self
 

@@ -11,7 +11,7 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "Straight but not straight",
+			"name": "Almost straight checker",
 			"version": "1.0.0",
 			"description": "For all masters of selected font, checks if any consecutive points are 1pt off."
 			}
@@ -24,8 +24,9 @@ class Script(QATask):
 
 	def run(self, parameters, report):
 		for m in self.font.masters:
-			report.add( "\n\n\n"+m.name, "\n---------------------------------------------", passed=None )
+			report.add( "\n\n\n---------------------------------------------\n" + m.name + "\n---------------------------------------------", passed=None )
 			previous_glyph=""
+
 			for g in self.font.glyphs:
 				layer =  g.layers[m.id]
 				points = []
@@ -49,12 +50,12 @@ class Script(QATask):
 						
 							if diffX==1 or diffY==1:
 								if g != previous_glyph: # avoid repeating glyph name for each point
-									report.add( "\n*", g.name, passed=None )
+									report.add( "\n*" + g.name, passed=None )
 									previous_glyph = g
 								if diffX==1:
-									report.add( "x\t", "check horizontal alignment between " + report.node(point) + " and " + report.node(prev_point), passed=False )
+									report.add( report.node(point) + " and " + report.node(prev_point) + " is off on x ", passed=False )
 								if diffY==1:
-									report.add( "y\t", "check vertical alignment between " + report.node(point) + " and " + report.node(prev_point), passed=False )
+									report.add( report.node(point) + " and " + report.node(prev_point) + " is off on y ", passed=False )
 
 								
 

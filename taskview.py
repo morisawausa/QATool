@@ -28,7 +28,7 @@ class OCC_QATaskView():
 		font = Glyphs.font
 		name = font.familyName
 		self.report = task.start(task.parameters())
-		print "\n\n\n", name, "++++++++++++++++++++++++++++++++++++++++\n", self.report
+		print "\n\n\n", name, "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n", self.report
 		return self
 
 

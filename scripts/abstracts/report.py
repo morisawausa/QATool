@@ -15,13 +15,13 @@ class QAReport():
 		self.lines = list()
 		
 
-	def add(self, header, desc, passed=None):
+	def add(self, desc, passed=None):
 		"""Adds line of task test information to report.
 		passed=None for general reporting, default value
 		passed=True for successful tests
 		passed=False for failed tests
 		"""
-		line = QALine(passed, header, desc)
+		line = QALine(passed, desc)
 		self.lines.append(line)
 		return self
 
@@ -57,6 +57,6 @@ class QAReport():
 			# # 	output += "YAS\t\t"
 			# # else:
 			# 	output += "OOPS\t\t"
-			output += line.header + line.desc + '\n'
+			output += line.desc + '\n'
 
 		return output

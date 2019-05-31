@@ -110,7 +110,6 @@ class OCC_QATaskListView():
 
 	def run_profile(self, sender):
 		"""looks at current profile and runs all tasks"""
-		print "run selected tests"
 		self.profile.run()
 		pass
 
