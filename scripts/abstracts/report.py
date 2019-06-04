@@ -16,13 +16,16 @@ class QAReport():
 		
 
 	def add(self, desc, passed=None):
-		"""Adds line of task test information to report.
+		"""Adds line of the task test result to report.
 		passed=None for general reporting, default value
 		passed=True for successful tests
 		passed=False for failed tests
 		"""
-		line = QALine(passed, desc)
-		self.lines.append(line)
+		self.result = dict()
+		self.result['passed'] = passed # test result
+		self.result['desc'] = desc # description of result
+
+		self.lines.append(self.result)
 		return self
 
 
@@ -32,21 +35,32 @@ class QAReport():
 		If any task has failed, returns fail.
 		If all tasks succeed, returns pass.
 		"""
-		for line in self.lines:
-			if line.passed is not None:
+		# for line in self.lines:
+		# 	if line.passed is not None:
+		# 		self.passed = self.passed and line.passed
 
-				self.passed = self.passed and line.passed
-
-				if line.passed:
-					self.number_passed +=1
-				else:
-					self.number_failed +=1
+		# 		if line.passed:
+		# 			self.number_passed +=1
+		# 		else:
+		# 			self.number_failed +=1
 
 		return self
+
 
 	def node(self, GSnode):
 		"""outputs GS Node into human-readable point coordinates"""
 		return "(" + str(GSnode.x) + "," + str(GSnode.y) + ")"
+
+
+	def master(self, GSmaster):
+		"""outputs and formats GS Master into human-readable name"""
+		return "\n\n\n---------------------------------------------\n" + GSmaster.name + "\n---------------------------------------------"
+
+
+	def glyph(self, GSglyph):
+		"""formats glyph name for output"""
+		return "\n\n" + GSglyph.name + "\n------------"
+
 
 	def __repr__(self):
 		output = self.task.details()['name'] +'\n\n'
@@ -57,6 +71,6 @@ class QAReport():
 			# # 	output += "YAS\t\t"
 			# # else:
 			# 	output += "OOPS\t\t"
-			output += line.desc + '\n'
+			output += line['desc'] + '\n'
 
 		return output

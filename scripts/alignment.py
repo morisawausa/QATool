@@ -7,14 +7,14 @@ from abstracts.task import QATask
 import numpy as np
 
 class Script(QATask):
-	"""Checks vertical alignment of key points across masters. Uses a threshold to scan for points within each vertical metric"
+	"""Checks vertical alignment of key points across masters. Uses a threshold to scan for points within each vertical metric."
 	"""
 
 	def details(self):
 		return {
 			"name": "Vertical metrics checker",
 			"version": "1.0.0",
-			"description": "For all masters of selected font, checks if any point falls within the error threshold. Checks against metrics based off of reference glyphs as follows: baseline (H), baseline overshoot (O), ascender (h), descender(p), capheight(H), capheight overshoot (O), xheight (u), xheight overshoot (o)."
+			"description": "For all masters of selected font, checks if any point falls within the error threshold. Checks against metrics based off of reference glyphs as follows: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o), floating cap accents (Agrave), floating lc accents (agrave)"
 			}
 
 
@@ -32,7 +32,7 @@ class Script(QATask):
 		self.master = self.font.selectedFontMaster.id
 
 		def ref_nodes(ref):
-			glyph = self.font.glyphs[ref].layers[self.master]
+			glyph = self.glyphs[ref].layers[self.master]
 			nodes = []
 			for path in glyph.paths:
 				for node in path.nodes:
@@ -62,9 +62,9 @@ class Script(QATask):
 		report.add( "\nAlignment buffer: " + str(padding), passed=None )
 
 		for m in self.font.masters:
-			report.add( "\n\n\n---------------------------------------------\n" + m.name + "\n---------------------------------------------", passed=None )
+			report.add( report.master(m), passed=None )
 			previous_glyph=""
-			for g in self.font.glyphs:
+			for g in self.glyphs:
 				layer =  g.layers[m.id]
 				for path in layer.paths:
 					for node in path.nodes:
@@ -73,19 +73,11 @@ class Script(QATask):
 								break
 							else:
 								nearest = self.findNearest(metrics.keys(), node.y)
-								difference = node.y - nearest
-								if (abs(difference) < padding):
+								diff = node.y - nearest
+								if (abs(diff) < padding):
 									if (g != previous_glyph): # avoid repeating glyph name for each point
-										report.add( "\n*" + g.name, passed=None )
+										report.add( report.glyph(g), passed=None )
 										previous_glyph = g
+										report.add(report.node(node) + " is off of the " + metrics[nearest] + " by " + str(diff), passed=False)
 
-									shift = ""
-
-									def note(shift):
-										return "".join([" is ", shift, " the ", metrics[nearest], " by ", str(abs(difference))])
-									
-									if difference < 0:
-										report.add(report.node(node) + note('below'), passed=False)
-									else:
-										report.add(report.node(node) + note('above'), passed=False)
 

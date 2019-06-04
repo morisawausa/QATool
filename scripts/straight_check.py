@@ -24,10 +24,10 @@ class Script(QATask):
 
 	def run(self, parameters, report):
 		for m in self.font.masters:
-			report.add( "\n\n\n---------------------------------------------\n" + m.name + "\n---------------------------------------------", passed=None )
+			report.add( report.master(m), passed=None )
 			previous_glyph=""
 
-			for g in self.font.glyphs:
+			for g in self.glyphs:
 				layer =  g.layers[m.id]
 				points = []
 
@@ -50,12 +50,12 @@ class Script(QATask):
 						
 							if diffX==1 or diffY==1:
 								if g != previous_glyph: # avoid repeating glyph name for each point
-									report.add( "\n*" + g.name, passed=None )
+									report.add( report.glyph(g), passed=None )
 									previous_glyph = g
 								if diffX==1:
-									report.add( report.node(point) + " and " + report.node(prev_point) + " is off on x ", passed=False )
+									report.add( "/ " + report.node(point) + " and " + report.node(prev_point) + " is horizontally off by 1.0", passed=False )
 								if diffY==1:
-									report.add( report.node(point) + " and " + report.node(prev_point) + " is off on y ", passed=False )
+									report.add( "- " + report.node(point) + " and " + report.node(prev_point) + " is vertically off by 1.0", passed=False )
 
 								
 

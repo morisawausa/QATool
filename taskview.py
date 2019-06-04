@@ -25,8 +25,7 @@ class OCC_QATaskView():
 
 
 	def render_task_report(self, task):
-		font = Glyphs.font
-		name = font.familyName
+		name = task.font.familyName
 		self.report = task.start(task.parameters())
 		print "\n\n\n", name, "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n", self.report
 		return self
