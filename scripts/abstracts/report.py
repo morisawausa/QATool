@@ -49,6 +49,5 @@ class QAReport( ):
 	def finalize(self):
 		"""Update QAReport after running test and return QAReport.
 		"""
-		# print "finalize notes", self.notes
 		return self.results, self.notes
 
