@@ -7,14 +7,15 @@ from abstracts.task import QATask
 import numpy as np
 
 class Script(QATask):
-	"""Checks vertical alignment of key points across masters. Uses a threshold to scan for points within each vertical metric."
+	"""Checks vertical alignment of key points across masters.
+	Scans for points within the zone threshold around each vertical metric.
 	"""
 
 	def details(self):
 		return {
 			"name": "Vertical metrics checker",
 			"version": "1.0.0",
-			"description": "For all masters of selected font, checks if any point falls within the error threshold. Checks against metrics based off of reference glyphs as follows: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o), floating cap accents (Agrave), floating lc accents (agrave)"
+			"description": "For all masters of selected font, checks if any point falls within the {Zone threshold} (3pts by default.) Uses the following glyphs as reference points for alignment: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o), floating cap accents (Agrave), floating lc accents (agrave)"
 			}
 
 
@@ -29,10 +30,9 @@ class Script(QATask):
 		return array[idx]
 	
 	def set_metrics(self):
-		self.master = self.font.selectedFontMaster.id
 
 		def ref_nodes(ref):
-			glyph = self.glyphs[ref].layers[self.master]
+			glyph = self.glyphs[ref].layers[self.font.selectedFontMaster.id]
 			nodes = []
 			for path in glyph.paths:
 				for node in path.nodes:
@@ -63,7 +63,7 @@ class Script(QATask):
 		report.note("\n* Alignment buffer: " + str(padding) + 
 		"\n" )
 
-		for m in self.font.masters:
+		for m in self.masters:
 			for g in self.glyphs:
 				layer =  g.layers[m.id]
 				for path in layer.paths:

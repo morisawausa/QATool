@@ -50,7 +50,8 @@ class QAProfile():
 
 	def run(self):
 		"""Given a pool of available tasks, runs a selection of tasks and reports the result. """
-
+		Glyphs.clearLog()
+		
 		self.all_errors = {}
 		self.all_notes = []
 
@@ -118,19 +119,20 @@ class QAProfile():
 
 	def report_all(self):
 		"""generate final report"""
-		Glyphs.clearLog()
 		
 		print str(self.testCount) + " tests run\n"
 
 		output = ""
 
-		output += "\n\n++++++++++++++++++++++++\nREFERENCE POINTS\n++++++++++++++++++++++++\n\n"
+		output += "\n\nREFERENCE\n++++++++++++++++++++++++\n\n"
 
 		# output all notes
 		for n in self.all_notes:
 			for line in n:
 				output += line + "\n"
 
+
+		output += "\n\nTEST RESULTS\n++++++++++++++++++++++++\n\n"		
 
 		# output all errors by master
 		for master in self.all_errors:
@@ -153,7 +155,6 @@ class QAProfile():
 				for line in errorGlyphs[e]:
 					output += "[" + line['header'] + "] " 
 					output += line['desc'] +'\n'
-
 
 		print output
 

@@ -19,7 +19,7 @@ class Script(QATask):
 		return {
 			"name": "Components checker",
 			"version": "1.0.0",
-			"description": "For all masters of selected font, checks:\n - [Component] whether the components correspond with the glyph name \n - [Component Order] order of components \n - [Component Width] whether component glyphs have the same width as its base \n - [Component Alignment] vertical consistency of floating accents (uses accent baseline from reference glyphs defined in parameters below)"
+			"description": "For all masters of selected font, checks:\n - [Component] whether the components correspond with the glyph name \n - [Component Order] order of components \n - [Component Width] whether component glyphs have the same width as its base \n - [Component Alignment] vertical consistency of floating accents measured against {reference glyphs}"
 			}
 
 
@@ -184,7 +184,7 @@ class Script(QATask):
 		for p in parameters:
 			self.report.note("* ALIGN ACCENTS for " + p.keys()[0] + " to " + p.values()[0])
 
-		for m in self.font.masters:
+		for m in self.masters:
 			alignment_points = self.get_metrics(m, parameters)
 			self.report.note("\n* MASTER " + m.name + ":")
 

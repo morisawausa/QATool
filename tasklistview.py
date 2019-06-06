@@ -46,15 +46,15 @@ class OCC_QATaskListView():
 		self.w.params = Box((15, 470, -15, 110), "Parameters")
 
 		self.w.params.param0 = Group((5,5,-5,25))
-		self.w.params.param0.input = EditText((0, 0, 100, -0), placeholder="0", callback=self.param_callback, continuous=False)
+		self.w.params.param0.input = EditText((0, 0, 100, -0), placeholder="0", callback=self.param_callback)
 		self.w.params.param0.label = TextBox((102, 3, -0, -0), "Parameter")
 
 		self.w.params.param1 = Group((5,35,-5,25))
-		self.w.params.param1.input = EditText((0, 0, 100, -0), placeholder="1", callback=self.param_callback, continuous=False)
+		self.w.params.param1.input = EditText((0, 0, 100, -0), placeholder="1", callback=self.param_callback)
 		self.w.params.param1.label = TextBox((102, 3, -0, -0), "Parameter")
 
 		self.w.params.param2 = Group((5,65,-5,25))
-		self.w.params.param2.input = EditText((0, 0, 100, -0), placeholder="2", callback=self.param_callback, continuous=False)
+		self.w.params.param2.input = EditText((0, 0, 100, -0), placeholder="2", callback=self.param_callback)
 		self.w.params.param2.label = TextBox((102, 3, -0, -0), "Parameter")
 
 		# select the first task
@@ -62,7 +62,6 @@ class OCC_QATaskListView():
 
 		# set up Run button
 		self.w.runAllButton = SquareButton((15, -55, -15, 40), "Run Selected Tests", callback=self.run_profile)
-
 
 		self.w.open()
 
@@ -115,14 +114,16 @@ class OCC_QATaskListView():
 	def param_callback(self, sender):
 		"""upon entering parameters, save to profile test parameters"""
 
-		# get parameter information
+		# get input value
 		param_input = sender.get()
 
+		# format parameter to appropriate type
 		try:
 			param_input = int(param_input)
 		except ValueError:
 			param_input = param_input.encode('utf-8')
 
+		# get parameter index
 		param_index = int(sender.getPlaceholder())
 
 		# save entered params to profile
@@ -134,7 +135,3 @@ class OCC_QATaskListView():
 		self.profile.run()
 		pass
 
-
-	def run_single_task(self, task):
-		"""TODO: given a QATask, execute that task"""
-		pass

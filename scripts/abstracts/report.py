@@ -18,7 +18,7 @@ class QAReport( ):
 
 
 	def add(self, master, glyph, header, desc, passed):
-		"""Adds line of the task test result to report.
+		"""Adds line of a single test result to report.
 		"""
 		glyphName = glyph.encode('utf-8')
 		masterName = master.encode('utf-8')
@@ -34,15 +34,15 @@ class QAReport( ):
 		return self
 
 
-	def note(self, desc):
-		"""Adds explanatory descriptors to report
+	def note(self, message):
+		"""Adds explanatory descriptors to report.
 		"""
-		self.notes.append(desc)
+		self.notes.append(message)
 		return self
 
 
 	def node(self, GSnode):
-		"""outputs GS Node into human-readable point coordinates"""
+		"""Formats GS Node into human-readable point coordinates"""
 		return "(" + str(GSnode.x) + "," + str(GSnode.y) + ")"
 
 

@@ -6,14 +6,13 @@ from abstracts.task import QATask
 
 
 class Script(QATask):
-	"""Checks if there are any path endpoints that are 1pt off."
-	"""
+	"""Checks for paths or handles that are supposed to be straight."""
 
 	def details(self):
 		return {
 			"name": "Almost straight checker",
 			"version": "1.0.0",
-			"description": "For all masters of selected font, checks if any consecutive points are 1pt off."
+			"description": "For all masters of selected font, checks if any consecutive points are off by the {Skew threshold} (1pt by default.)"
 			}
 
 
@@ -26,14 +25,13 @@ class Script(QATask):
 	def run(self, parameters, report):
 
 		skew = parameters[0]['Skew threshold']
-		report.note("\n* Skewed by: " + str(skew) + 
-		"pts \n" )
+		
+		report.note("\n* Skewed by: " + str(skew) + "pts \n")
 
-		for m in self.font.masters:
+		for m in self.masters:
 			for g in self.glyphs:
 				layer =  g.layers[m.id]
 				points = []
-
 				for path in layer.paths:
 					points = []
 					for node in path.nodes:
@@ -41,7 +39,7 @@ class Script(QATask):
 				
 					for i, val in enumerate(points):
 						point = points[i]
-						if i==0:
+						if i == 0:
 							prev_point = points[0]
 						else:
 							prev_point = points[i-1]
@@ -51,11 +49,8 @@ class Script(QATask):
 							diffX = abs(point.x - prev_point.x)
 							diffY = abs(point.y - prev_point.y)
 						
-							if diffX==skew or diffY==skew:
-								if diffX==skew:
+							if diffX == skew or diffY == skew:
+								if diffX == skew:
 									report.add(m.name, g.name, 'Not straight', "/ " + report.node(point) + " and " + report.node(prev_point) + " is off on the x by " + str(skew) + "pts", passed=False )
-								if diffY==skew:
+								if diffY == skew:
 									report.add(m.name, g.name, 'Not straight', "- " + report.node(point) + " and " + report.node(prev_point) + " is off on the y by " + str(skew) + "pts", passed=False )
-
-								
-

@@ -26,16 +26,4 @@ class OCC_QATaskView():
 		return self.task.parameters()
 
 
-	# def render_task_report(self, task):
-	# 	self.errors = {}
-	# 	#set up placeholder list of errors for each glyph
-	# 	for g in Glyphs.font.glyphs:
-	# 		key = g.name.encode('utf-8')
-	# 		self.errors[key] = list()
-
-	# 	self.report = task.start(task.parameters())
-	# 	print "\n\n\n", name, "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n", self.report
-	# 	print self.report
-	# 	return self
-
 

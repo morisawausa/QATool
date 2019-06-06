@@ -10,6 +10,7 @@ class QATask():
 	def __init__(self):
 		self.report = QAReport(self)
 		self.font = Glyphs.font
+		self.masters = self.font.masters
 		self.glyphs = self.font.glyphs
 
 
