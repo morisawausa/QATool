@@ -3,9 +3,8 @@
 __doc__="""
 Occupant QA Tool
 """
-import objc
+
 from GlyphsApp import *
-from GlyphsApp.plugins import *
 from vanilla import *
 from vanilla.test.testAll import Test
 import traceback
@@ -15,7 +14,7 @@ from tasklistview import OCC_QATaskListView
 class OCC_QATool():
 
 	def __init__(self):
-		print "Welcome to the Occupant QA Tool :)"
+		print "\n\nWelcome to the Occupant QA Tool :)\n\n"
 		# Test()
 		self.application = OCC_QATaskListView()
 

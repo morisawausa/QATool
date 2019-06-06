@@ -25,21 +25,18 @@ class QATask():
 
 	def parameters(self):
 		"""Returns default task parameters."""
-		return dict()
+		return list()
 
 
 	def start(self, parameters):
 		"""Calls run method and stores results in QAReport.
 		Returns QAReport for rendering."""
-	
 		self.report = QAReport(self)
-
 		self.run(parameters, self.report)
-		
-		self.report.finalize()
-		return self.report
+		return self.report.finalize()
 
 
 	def run(self, parameters, report):
 		"""Implementers should override this method to run test"""
 		pass
+

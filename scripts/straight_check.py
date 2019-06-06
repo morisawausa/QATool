@@ -18,15 +18,18 @@ class Script(QATask):
 
 
 	def parameters(self):
-		return {
-		}
+		return [
+			{"Skew threshold": 1}
+		]
 
 
 	def run(self, parameters, report):
-		for m in self.font.masters:
-			report.add( report.master(m), passed=None )
-			previous_glyph=""
 
+		skew = parameters[0]['Skew threshold']
+		report.note("\n* Skewed by: " + str(skew) + 
+		"pts \n" )
+
+		for m in self.font.masters:
 			for g in self.glyphs:
 				layer =  g.layers[m.id]
 				points = []
@@ -48,14 +51,11 @@ class Script(QATask):
 							diffX = abs(point.x - prev_point.x)
 							diffY = abs(point.y - prev_point.y)
 						
-							if diffX==1 or diffY==1:
-								if g != previous_glyph: # avoid repeating glyph name for each point
-									report.add( report.glyph(g), passed=None )
-									previous_glyph = g
-								if diffX==1:
-									report.add( "/ " + report.node(point) + " and " + report.node(prev_point) + " is horizontally off by 1.0", passed=False )
-								if diffY==1:
-									report.add( "- " + report.node(point) + " and " + report.node(prev_point) + " is vertically off by 1.0", passed=False )
+							if diffX==skew or diffY==skew:
+								if diffX==skew:
+									report.add(m.name, g.name, 'Not straight', "/ " + report.node(point) + " and " + report.node(prev_point) + " is off on the x by " + str(skew) + "pts", passed=False )
+								if diffY==skew:
+									report.add(m.name, g.name, 'Not straight', "- " + report.node(point) + " and " + report.node(prev_point) + " is off on the y by " + str(skew) + "pts", passed=False )
 
 								
 

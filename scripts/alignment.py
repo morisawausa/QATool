@@ -19,16 +19,16 @@ class Script(QATask):
 
 
 	def parameters(self):
-		return {
-			"Zone Threshold": 3,
-		}
+		return [
+			{"Zone threshold": 3}
+		]
 
-	def findNearest(self, array, value):
+	def find_nearest(self, array, value):
 		array = np.asarray(array)
 		idx = (np.abs(array - value)).argmin()
 		return array[idx]
 	
-	def setMetrics(self):
+	def set_metrics(self):
 		self.master = self.font.selectedFontMaster.id
 
 		def ref_nodes(ref):
@@ -53,17 +53,17 @@ class Script(QATask):
 		return metrics_dict
 
 	def run(self, parameters, report):
-		metrics = self.setMetrics()
+
+		metrics = self.set_metrics()
+
 		metrics_output = '\n'.join(['%s = %s' % (value, key) for (key, value) in metrics.items()])
+		report.note("\n* Alignment metrics:\n" + metrics_output )
 
-		report.add( "Alignment metrics:\n" + metrics_output, passed=None )
-
-		padding = parameters['Zone Threshold']
-		report.add( "\nAlignment buffer: " + str(padding), passed=None )
+		padding = parameters[0]['Zone threshold']
+		report.note("\n* Alignment buffer: " + str(padding) + 
+		"\n" )
 
 		for m in self.font.masters:
-			report.add( report.master(m), passed=None )
-			previous_glyph=""
 			for g in self.glyphs:
 				layer =  g.layers[m.id]
 				for path in layer.paths:
@@ -72,12 +72,8 @@ class Script(QATask):
 							if node.y in metrics.keys():
 								break
 							else:
-								nearest = self.findNearest(metrics.keys(), node.y)
+								nearest = self.find_nearest(metrics.keys(), node.y)
 								diff = node.y - nearest
 								if (abs(diff) < padding):
-									if (g != previous_glyph): # avoid repeating glyph name for each point
-										report.add( report.glyph(g), passed=None )
-										previous_glyph = g
-										report.add(report.node(node) + " is off of the " + metrics[nearest] + " by " + str(diff), passed=False)
-
+									report.add(m.name, g.name, 'Vertical metrics', report.node(node) + " is off of the " + metrics[nearest] + " by " + str(diff), passed=False)
 

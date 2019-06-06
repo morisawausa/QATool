@@ -1,4 +1,3 @@
 Almost straight checker
 Vertical metrics checker
 Components checker
-Compare glyph names
