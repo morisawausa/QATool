@@ -15,9 +15,12 @@ class OCC_QATool():
 
 	def __init__(self):
 		Glyphs.showMacroWindow()
-		print "\n\nWelcome to the Occupant QA Tool :)\n\n"
 		# Test()
-		self.application = OCC_QATaskListView()
+		if Glyphs.font:
+			print "\n\nWelcome to the Occupant QA Tool :)\n\n"
+			self.application = OCC_QATaskListView()
+		else:
+			print "There are no fonts open :/."
 
 if __name__ == '__main__':
 	tool = OCC_QATool()

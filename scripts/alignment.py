@@ -14,8 +14,8 @@ class Script(QATask):
 	def details(self):
 		return {
 			"name": "Vertical metrics checker",
-			"version": "1.0.0",
-			"description": "For all masters of selected font, checks if any point falls within the {Zone threshold} (3pts by default.) Uses the following glyphs as reference points for alignment: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o), floating cap accents (Agrave), floating lc accents (agrave)"
+			"version": "1.2.0",
+			"description": "For all masters of selected font, checks if any point falls within the {Zone threshold} (3pts by default.) Uses the following glyphs as reference points for alignment: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o). If small caps exists, also checks small cap capheight (H.sc)"
 			}
 
 
@@ -49,6 +49,10 @@ class Script(QATask):
 		 max(ref_nodes('u')): "xheight",
 		 max(ref_nodes('o')): "xheight overshoot",
 		}
+
+		if self.glyphs["H.sc"] in self.glyphs:
+			metrics_dict[max(ref_nodes('H.sc'))] = "smallcapheight"
+			metrics_dict[max(ref_nodes('O.sc'))] = "smallcapheight overshoot"
 		
 		return metrics_dict
 
