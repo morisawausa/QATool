@@ -11,13 +11,14 @@ Usually, the path to your Glyphs scripts folder is:
 `/Users/*yourusername*/Library/Application\ Support/Glyphs/Scripts`
 
 ## Usage
-Access the QA Tool in Glyphs via `Script > OccQATool > Occupant QA`
+![Screenshot of QA Tool](QATool_screenshot.png)
 > You should have a font file open before launching the tool. For now, relaunch your tool when running for a different font (in order to load the correct default parameters)
 
-## How it works
-1. Select a test or multiple tests
-2. Use the default parameters or enter in your own
-3. Hit *Run Selected Tests*
+1. Select the font to run QA. It will only run on the selected font.
+2. Launch the QA Tool via `Script > OccQATool > Occupant QA`
+3. Select a test or multiple tests from the list
+4. Verify the default parameters or enter in your own
+5. Hit *Run Selected Tests*
 
 ## The Report 
 There are two types of outputs for the QA Report: a) Notes and b) Results.
@@ -46,7 +47,7 @@ Master Name
 
 Glyph Name
 ------------
-[Test Label] Test description
+[Test Label] Result description
 
 ...
 ```
@@ -54,7 +55,7 @@ Glyph Name
 ## The Tests
 
 ### Structure
-All tests inherits the constructor `abstract > task.py`. The test *must* follow this template to execute properly from the tool.
+All tests inherits the constructor `scripts > abstracts > task.py`. The test *must* follow this template to execute properly from the tool.
 If no parameters exist for the test, simply return nothing.
 
 ```python
