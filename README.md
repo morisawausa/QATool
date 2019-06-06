@@ -1,5 +1,5 @@
 # _OccQATool
-This repository holds the Occupant Fonts QA Tool for the Glyphs application. It serves as a way to manage the QA items agreed upon by the team as well as as an interface to run the scripts.
+This repository holds the Occupant Fonts QA Tool for the Glyphs application. It serves as a way to manage the QA items agreed upon by the team and as an interface to run the relevant scripts.
 > Note: The QA Tool only reports on items — it will never change anything in your font file. For scripts to assist in glyphs manipulation, access the [_GlyphsScripts](https://github.com/morisawausa/_GlyphsScripts) repository.
 
 ## Getting Started
@@ -21,7 +21,7 @@ Usually, the path to your Glyphs scripts folder is:
 5. Hit *Run Selected Tests*
 
 ## The Report 
-There are two types of outputs for the QA Report: a) Notes and b) Results.
+There are two types of outputs for the QA Report: **Notes** and **Results**.
 
 ### Notes
 All notes will be displayed first under REFERENCE.
@@ -142,9 +142,7 @@ Additional tests can be added by:
 
 ### Tool Updates
 All feature requests and issues of the tool itself are handled in [Github issues](https://github.com/morisawausa/OccQATool/issues).
-The Project [QA Tool Updates](https://github.com/morisawausa/OccQATool/projects/1) provides tracking into each.
-
-
+Please tag each issue with relevant labels and with the [QA Tool Updates](https://github.com/morisawausa/OccQATool/projects/1) project. This is where issues will be tracked for futher versions of the tool.
 
 
 
