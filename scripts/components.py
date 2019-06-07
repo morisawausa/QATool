@@ -74,6 +74,8 @@ class Script(QATask):
 				composed_name += "i"
 			elif "comb.case" in component.name:
 				composed_name += component.name.replace("comb.case","")
+			elif "comb.sc" in component.name:
+				composed_name += component.name.replace("comb.sc","")
 			elif "comb" in component.name:
 				composed_name += component.name.replace("comb","")
 			elif suffix in component.name:
