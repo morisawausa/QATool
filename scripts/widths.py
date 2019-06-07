@@ -19,7 +19,7 @@ class Script(QATask):
 		return {
 			"name": "Fixed width checker",
 			"version": "1.0.0",
-			"description": "Checks glyphs that have fixed widths: combining accents, legacy accents, spacing glyphs, and tabular glyphs"
+			"description": "Checks glyphs that have fixed widths: combining accents, legacy accents, tabular glyphs, and spacing glyphs."
 			}
 
 
@@ -29,35 +29,47 @@ class Script(QATask):
 
 	def run(self, parameters, report):
 
-		unicode_space = {  '2000': (.5, "enquad"),
-		               '2001': (1, "emquad"),
-		               '2002': (.5,  "enspace"),
-		               '2003': (1,  "emspace"),
-		               '2004': (.333, "threeperemspace"),
-		               '2005': (.25,  "fourperemspace"),
-		               '2006': (.166, "sixperemspace"),
-		               '2009': (.166,  "thinspace"),
-		               '200A': (.1,  "hairspace"),
-		               '200B': (0, "zerowidthspace"),
-		               'FEFF': (0, "nonbreakingzerowidthspace"),
-		               }
+		# get units per em
+		upm = self.font.upm
+
+		spaces = {
+			"enquad" : .5,
+			"emquad" : 1,
+			"enspace" : .5,
+			"emspace" : 1,
+			"threeperemspace" : .333,
+			"fourperemspace" : .25,
+			"sixperemspace" : .166,
+			"thinspace" : .166,
+			"hairspace" : .1,
+			"zerowidthspace" : 0,
+			"zerowidthnobreakspace" : 0,
+		}
 
 
 		for m in self.masters:
 
 			if "zero.tf" in self.glyphs:
 				tab_width = self.glyphs["zero.tf"].layers[m.id].width
-				report.note("\n* MASTER " + m.name + " tab_width = " + str(tab_width))
+				report.note("* MASTER " + m.name + " tab_width = " + str(tab_width) + "\n")
 			else:
-				report.note("zero.tf does not exist")
+				tab_width = False
+				report.note("Tabular glyphs or zero.tf does not exist")
 
 			for g in self.glyphs:
+
 				width = g.layers[m.id].width
 
 				if g.subCategory=="Nonspacing":
 					if width != 0:
 						report.add(m.name, g.name, "Zero width", g.name + " has a non-zero width", passed=False)
-				if g.name.endswith(".tf") or g.subCategory=="Spacing":
-					if width != tab_width:
-						report.add(m.name, g.name, "Tabular width", g.name + " is off of the tab width by " + str(tab_width-width), passed=False)
+				if g.name.endswith(".tf") or g.subCategory=="Spacing" or g.name == "figurespace":
+					if tab_width:
+						if width != tab_width:
+							report.add(m.name, g.name, "Tabular width", g.name + " is off of the tab width by " + str(tab_width-width), passed=False)
+				if g.name in spaces:
+					space_width = upm * spaces[g.name]
+					if width != space_width:
+						report.add(m.name, g.name, "Space width", g.name + " is off of the space width by " + str(tab_width-width), passed=False)
+
 
