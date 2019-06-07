@@ -1,3 +1,4 @@
 Almost straight checker
 Vertical metrics checker
 Components checker
+Fixed width checker

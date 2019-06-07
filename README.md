@@ -56,7 +56,7 @@ Glyph Name
 
 ### Structure
 All tests inherits the constructor `scripts > abstracts > task.py`. The test *must* follow this template to execute properly from the tool.
-If no parameters exist for the test, simply return nothing.
+If no parameters exist for the test, return an empty list `[]`.
 
 ```python
 # -*- coding: utf-8 -*-

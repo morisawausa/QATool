@@ -39,7 +39,7 @@ class Script(QATask):
 		"""Sets up list of a)diacritic marks and b)glyphs with components"""
 
 		self.diacritics = []
-		self.componentGlyphs = []
+		self.component_glyphs = []
 		
 		for g in self.glyphs:
 			layer = g.layers[self.font.selectedFontMaster.id]
@@ -50,14 +50,14 @@ class Script(QATask):
 			
 			# collect glyphs with components
 			if layer.components and g.category == "Letter":
-				self.componentGlyphs.append(g)
+				self.component_glyphs.append(g)
 
 
 	def check_names(self, glyph, master):
 		"""Given a glyph with components, tracks the component order by concatenating the detected components together"""
 
 		# placeholder for detected components
-		composedName = ""
+		composed_name = ""
 
 		# process suffixed glyphs such as .sc and .salt_tail
 		name = ""
@@ -71,44 +71,44 @@ class Script(QATask):
 			
 			# compose component names
 			if component.name == "idotless":
-				composedName += "i"
+				composed_name += "i"
 			elif "comb.case" in component.name:
-				composedName += component.name.replace("comb.case","")
+				composed_name += component.name.replace("comb.case","")
 			elif "comb" in component.name:
-				composedName += component.name.replace("comb","")
+				composed_name += component.name.replace("comb","")
 			elif suffix in component.name:
-				composedName += component.name.replace(suffix,"")
+				composed_name += component.name.replace(suffix,"")
 			else:
-				composedName += component.name
+				composed_name += component.name
 
 		# add suffix back onto the name	
-		composedName += suffix
+		composed_name += suffix
 
 		# check if it has the right components according to its name
 		if glyph.script == "latin": # only check Latin glyphs
-			if glyph.name != composedName:
+			if glyph.name != composed_name:
 				self.report.add(master.name, glyph.name, 'Component order', "base glyph is not first", passed=False)
 		
 
 	def get_components(self, glyph, master):
 		"""Given a glyph with components, returns the base glyph and accent components as a dictionary."""
 
-		componentDict = {}
+		component_types = {}
 
 		for component in glyph.layers[master.id].components:
 
 			# build dictionary of component and base glyphs
 			if component.name in self.diacritics:
 				# define accent glyph
-				componentDict['accent'] = component
+				component_types['accent'] = component
 			else:
 				# define base glyph from non-diacritic component
-				componentDict['baseComp'] = component
+				component_types['baseComp'] = component
 
 				# define base glyph from glyph name (in the case that base glyphs are decomposed)
-				componentDict['base'] = component.name.encode('utf-8')
+				component_types['base'] = component.name.encode('utf-8')
 
-		return componentDict
+		return component_types
 
 	
 	def check_widths(self, glyph, master, comps):
@@ -116,24 +116,24 @@ class Script(QATask):
 
 		# get width of glyph
 		width = glyph.layers[master.id].width
-		baseGlyph = ""
+		base_glyph = ""
 		
 		if 'baseComp' in comps:
-			baseGlyph = comps['baseComp'].componentName
+			base_glyph = comps['baseComp'].componentName
 		elif 'base' in comps:
-			baseGlyph = comps['base']
+			base_glyph = comps['base']
 			self.report.add(master.name, glyph.name, "Component", "base glyph is decomposed", passed=False)
 		else:
 			self.report.add(master.name, glyph.name, "Component", "unknown base glyph", passed=False)
 		
-		if baseGlyph != "":
+		if base_glyph != "":
 			# get width of base glyph
-			baseWidth = self.glyphs[baseGlyph].layers[master.id].width
+			base_width = self.glyphs[base_glyph].layers[master.id].width
 						
 			# check if the composed glyph width matches the width of its base glyph
-			diff = baseWidth - width
+			diff = base_width - width
 			if diff != 0:
-				self.report.add(master.name, glyph.name, "Component width", 'Width of ' + glyph.name + ' is off from ' + baseGlyph + " by " + str(diff), passed=False)
+				self.report.add(master.name, glyph.name, "Component width", 'Width of ' + glyph.name + ' is off from ' + base_glyph + " by " + str(diff), passed=False)
 
 
 	def get_metrics(self, master, parameters):
@@ -183,16 +183,16 @@ class Script(QATask):
 		self.setup_lists()
 		
 		for p in parameters:
-			self.report.note("* ALIGN ACCENTS for " + p.keys()[0] + " to " + p.values()[0])
+			report.note("* ALIGN ACCENTS for " + p.keys()[0] + " to " + p.values()[0])
 
 		for m in self.masters:
 			alignment_points = self.get_metrics(m, parameters)
-			self.report.note("\n* MASTER " + m.name + ":")
+			report.note("\n* MASTER " + m.name + ":")
 
 			for a in alignment_points:
-				self.report.note( a.encode('utf-8') + " accent line = " + str(alignment_points[a]))
+				report.note( a.encode('utf-8') + " accent line = " + str(alignment_points[a]))
 
-			for g in self.componentGlyphs:
+			for g in self.component_glyphs:
 
 				# check glyph name consistency and component order
 				self.check_names(g, m)

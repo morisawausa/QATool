@@ -3,7 +3,6 @@ import objc
 from GlyphsApp import *
 from vanilla import *
 
-from line import QALine
 
 class QAReport( ):
 
