@@ -30,8 +30,8 @@ class Script(QATask):
 		]
 
 		# check for small caps
-		if self.glyphs["A.sc"] in self.glyphs:
-			parameters.append({"Smallcaps": 'Agrave.sc'})
+		if self.glyphs["a.sc"] in self.glyphs:
+			parameters.append({"Smallcaps": 'agrave.sc'})
 		
 		return parameters
 

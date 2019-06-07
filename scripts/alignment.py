@@ -41,7 +41,7 @@ class Script(QATask):
 
 		metrics_dict = {
 		 min(ref_nodes('H')): "baseline", 
-		 min(ref_nodes('O')): "baseline overshoot",
+		 min(ref_nodes('O')): "baseline undershoot",
 		 max(ref_nodes('h')): "ascender",
 		 min(ref_nodes('p')): "descender", 
 		 max(ref_nodes('H')): "capheight",
@@ -50,9 +50,9 @@ class Script(QATask):
 		 max(ref_nodes('o')): "xheight overshoot",
 		}
 
-		if self.glyphs["H.sc"] in self.glyphs:
-			metrics_dict[max(ref_nodes('H.sc'))] = "smallcapheight"
-			metrics_dict[max(ref_nodes('O.sc'))] = "smallcapheight overshoot"
+		if self.glyphs["h.sc"] in self.glyphs:
+			metrics_dict[max(ref_nodes('h.sc'))] = "smallcapheight"
+			metrics_dict[max(ref_nodes('o.sc'))] = "smallcapheight overshoot"
 		
 		return metrics_dict
 
