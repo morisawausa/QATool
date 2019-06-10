@@ -24,7 +24,7 @@ class OCC_QATaskListView():
 		self.items = list()
 		
 		for test in self.profile.task_order:
-			self.items.append({'Test': test})
+			self.items.append({'Test': test, 'Select': False})
 
 		columnDescriptions = [
 			{"title": "Select", "cell": CheckBoxListCell(title=None), "width": 40},
@@ -46,15 +46,15 @@ class OCC_QATaskListView():
 		self.w.params = Box((15, 470, -15, 110), "Parameters")
 
 		self.w.params.param0 = Group((5,5,-5,25))
-		self.w.params.param0.input = EditText((0, 0, 100, -0), placeholder="0", callback=self.param_callback)
+		self.w.params.param0.input = EditText((0, 0, 100, -0), placeholder="0", callback=self.create_param_callback(0))
 		self.w.params.param0.label = TextBox((102, 3, -0, -0), "Parameter")
 
 		self.w.params.param1 = Group((5,35,-5,25))
-		self.w.params.param1.input = EditText((0, 0, 100, -0), placeholder="1", callback=self.param_callback)
+		self.w.params.param1.input = EditText((0, 0, 100, -0), placeholder="1", callback=self.create_param_callback(1))
 		self.w.params.param1.label = TextBox((102, 3, -0, -0), "Parameter")
 
 		self.w.params.param2 = Group((5,65,-5,25))
-		self.w.params.param2.input = EditText((0, 0, 100, -0), placeholder="2", callback=self.param_callback)
+		self.w.params.param2.input = EditText((0, 0, 100, -0), placeholder="2", callback=self.create_param_callback(2))
 		self.w.params.param2.label = TextBox((102, 3, -0, -0), "Parameter")
 
 		# select the first task
@@ -66,6 +66,34 @@ class OCC_QATaskListView():
 		self.w.open()
 
 
+	def create_param_callback(self, index):
+		"""given an index into the set of parameter text inputs,
+		return a callback that that text input can use to update
+		its state.
+
+		:param index: an integer that identifies the parameter input that this callback operates on.
+		:return: a callback that set a parameter in the QAProfile for the selected script.
+		"""
+		param_index = index
+		profile = self.profile
+
+		def param_callback(sender):
+			# get input value
+			param_input = sender.get()
+
+			# format parameter to appropriate type
+			try:
+				param_input = int(param_input)
+			except ValueError:
+				param_input = param_input.encode('utf-8')
+
+			# save entered params to profile
+			profile.load_params(self.selected_task_name, param_index, param_input)
+
+		return param_callback
+
+
+
 	def select_task(self, sender):
 		"""given a QATask, render that information to OCC_QATaskView"""
 
@@ -74,6 +102,9 @@ class OCC_QATaskListView():
 			return
 		else:
 			self.selected_index = selected[0] # only deal with single selection for now.
+
+			# self.w.list[self.selected_index]['Select'] = True
+
 
 			self.selected_task_name = self.items[self.selected_index]['Test'] # get name of selected task
 			
@@ -107,27 +138,8 @@ class OCC_QATaskListView():
 			group = 'param' + str(self.param_list.index(p))
 			param = getattr(self.w.params, group)
 			param.show(True)
-			param.input.set(p.values()[0])
-			param.label.set(p.keys()[0])
-
-
-	def param_callback(self, sender):
-		"""upon entering parameters, save to profile test parameters"""
-
-		# get input value
-		param_input = sender.get()
-
-		# format parameter to appropriate type
-		try:
-			param_input = int(param_input)
-		except ValueError:
-			param_input = param_input.encode('utf-8')
-
-		# get parameter index
-		param_index = int(sender.getPlaceholder())
-
-		# save entered params to profile
-		self.profile.load_params(self.selected_task_name, param_index, param_input)
+			param.input.set(p[1])
+			param.label.set(p[0])
 
 
 	def run_profile(self, sender):

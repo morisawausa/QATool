@@ -51,10 +51,10 @@ class Script(QATask):
 
 			if "zero.tf" in self.glyphs:
 				tab_width = self.glyphs["zero.tf"].layers[m.id].width
-				report.note("* MASTER " + m.name + " tab_width = " + str(tab_width) + "\n")
+				report.note("[TABULAR WIDTH] * MASTER %s tab_width = %i\n" %(m.name, tab_width) )
 			else:
 				tab_width = False
-				report.note("Tabular glyphs or zero.tf does not exist")
+				report.note("[TABULAR WIDTH] Tabular glyphs or zero.tf does not exist")
 
 			for g in self.glyphs:
 

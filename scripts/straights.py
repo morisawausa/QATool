@@ -18,15 +18,17 @@ class Script(QATask):
 
 	def parameters(self):
 		return [
-			{"Skew threshold": 1}
+			("Skew threshold", 1)
 		]
 
 
 	def run(self, parameters, report):
-
-		skew = parameters[0]['Skew threshold']
 		
-		report.note("\n* Skewed by: " + str(skew) + "pts \n")
+		report.note("\n\n[ALMOST STRAIGHTS]\n")
+
+		skew = parameters[0][1]
+		
+		report.note("\n* Skewed by: %i pts \n" % skew)
 
 		for m in self.masters:
 			for g in self.glyphs:
@@ -51,6 +53,6 @@ class Script(QATask):
 						
 							if diffX == skew or diffY == skew:
 								if diffX == skew:
-									report.add(m.name, g.name, 'Not straight', "/ " + report.node(point) + " and " + report.node(prev_point) + " is off on the x by " + str(skew) + "pts", passed=False )
+									report.add(m.name, g.name, 'Not straight', "/ " + report.node(point) + " and " + report.node(prev_point) + " is off on the x by %i pts" % skew, passed=False )
 								if diffY == skew:
-									report.add(m.name, g.name, 'Not straight', "- " + report.node(point) + " and " + report.node(prev_point) + " is off on the y by " + str(skew) + "pts", passed=False )
+									report.add(m.name, g.name, 'Not straight', "- " + report.node(point) + " and " + report.node(prev_point) + " is off on the y by %i pts" % skew, passed=False )

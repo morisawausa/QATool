@@ -21,7 +21,7 @@ class Script(QATask):
 
 	def parameters(self):
 		return [
-			{"Zone threshold": 3}
+			("Zone threshold", 3)
 		]
 
 	def find_nearest(self, array, value):
@@ -58,14 +58,15 @@ class Script(QATask):
 
 	def run(self, parameters, report):
 
+		report.note("\n\n[VERTICAL METRICS]\n")
+
 		metrics = self.set_metrics()
 
-		metrics_output = '\n'.join(['%s = %s' % (value, key) for (key, value) in metrics.items()])
-		report.note("\n* Alignment metrics:\n" + metrics_output )
+		metrics_output = "\n".join(["%s = %s" % (value, key) for (key, value) in metrics.items()])
+		report.note("\n* Alignments:\n" + metrics_output )
 
-		padding = parameters[0]['Zone threshold']
-		report.note("\n* Alignment buffer: " + str(padding) + 
-		"\n" )
+		padding = parameters[0][1]
+		report.note("\n* Buffer: %i\n" % padding)
 
 		for m in self.masters:
 			for g in self.glyphs:

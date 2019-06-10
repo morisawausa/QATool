@@ -66,7 +66,7 @@ class QAProfile():
 
 				self.testCount += 1
 
-				# execute test
+				# execute test and get return (results, notes)
 				results = task_info['Script'].start(task_info['Parameters'])[0]
 				
 				# store test results
@@ -103,10 +103,10 @@ class QAProfile():
 		from the current font's customParameters fields."""
 
 		# given param index, get name of parameter
-		param_name = self.tasks[task_name]['Parameters'][param_index].keys()[0]
+		param_name = self.tasks[task_name]['Parameters'][param_index][0]
 
 		# assign task new parameter in profile
-		self.tasks[task_name]['Parameters'][param_index] = { param_name : param_value}
+		self.tasks[task_name]['Parameters'][param_index] = (param_name, param_value)
 
 		return self
 

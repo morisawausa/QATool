@@ -25,13 +25,13 @@ class Script(QATask):
 
 	def parameters(self):
 		parameters = [
-			{"Uppercase": 'Agrave'},
-			{"Lowercase": 'agrave'}
+			("Uppercase", 'Agrave'),
+			("Lowercase", 'agrave')
 		]
 
 		# check for small caps
 		if self.glyphs["a.sc"] in self.glyphs:
-			parameters.append({"Smallcaps": 'agrave.sc'})
+			parameters.append("Smallcaps", 'agrave.sc')
 		
 		return parameters
 
@@ -143,8 +143,8 @@ class Script(QATask):
 		reference = { }
 		
 		for p in parameters:
-			ref_glyph = p.values()[0]
-			ref_category = p.keys()[0]
+			ref_glyph = p[1]
+			ref_category = p[0]
 
 			if ref_glyph in self.glyphs:
 				glyph = self.glyphs[ ref_glyph ]
@@ -158,7 +158,7 @@ class Script(QATask):
 		return reference
 
 
-	def check_alignment(self, glyph, master, comps, metrics):
+	def check_alignment(self, glyph, master, comps, metrics, report):
 		"""Given a component glyph, checks the bottom alignment of its accent to a given reference glyph"""
 
 		# check only latin accents
@@ -172,11 +172,11 @@ class Script(QATask):
 
 					diff = comps['accent'].bounds.origin.y - metrics[ glyph.subCategory ]
 					if diff != 0:
-						self.report.add(master.name, glyph.name, "Component alignment", comps['accent'].name + " is off of the accent line by " + str(diff), passed=False)
+						report.add(master.name, glyph.name, "Component alignment", comps['accent'].name + " is off of the accent line by " + str(diff), passed=False)
 				else:
-					self.report.note("Reference point for " + glyph.name + " in category [" + glyph.subCategory + "] is missing")
+					report.note("Reference point for " + glyph.name + " in category [" + glyph.subCategory + "] is missing")
 			else:
-				self.report.add(master.name, glyph.name, "Component", "Note: accent component is missing or decomposed", passed=False)
+				report.add(master.name, glyph.name, "Component", "Note: accent component is missing or decomposed", passed=False)
 
 
 
@@ -185,14 +185,14 @@ class Script(QATask):
 		self.setup_lists()
 		
 		for p in parameters:
-			report.note("* ALIGN ACCENTS for " + p.keys()[0] + " to " + p.values()[0])
+			report.note("*[COMPONENT ALIGNMENT] %s to %s" % (p[0], p[1]) )
 
 		for m in self.masters:
 			alignment_points = self.get_metrics(m, parameters)
-			report.note("\n* MASTER " + m.name + ":")
+			report.note("\n[COMPONENT ALIGNMENT] * MASTER %s :" % m.name)
 
 			for a in alignment_points:
-				report.note( a.encode('utf-8') + " accent line = " + str(alignment_points[a]))
+				report.note( "%s accent line = %i" % (a, alignment_points[a]) )
 
 			for g in self.component_glyphs:
 
@@ -206,4 +206,4 @@ class Script(QATask):
 				self.check_widths(g, m, comps)
 
 				# check accent alignment consistency
-				self.check_alignment(g, m, comps, alignment_points)
+				self.check_alignment(g, m, comps, alignment_points, report)

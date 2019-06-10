@@ -34,17 +34,15 @@ class Script(QATask):
 			else:
 				extra.append(g.name)
 		
-		report.note( str( len(self.glyphs) ) + " glyphs total\n-----------------------------------------")
+		report.note( "\n[CHARARCTER SET] %i glyphs total\n-----------------------------------------" % len(self.glyphs))
 
-		report.note( str( len(missing) ) + " missing glyphs\n-----------------------------------------")
+		report.note( "%i missing glyphs\n-----------------------------------------" % len(missing))
 		missing_output =""
 		for g in missing:
 			missing_output += g + "\n"
 		report.note( missing_output)
 
-
-
-		report.note( str( len(extra) ) + " extra glyphs\n-----------------------------------------")
+		report.note( "%i extra glyphs\n-----------------------------------------" % len(extra))
 		extra_output =""
 		for g in extra:
 			extra_output += g + "\n"
