@@ -17,7 +17,7 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "Fixed width checker",
+			"name": "Fixed widths",
 			"version": "1.0.0",
 			"description": "Checks glyphs that have fixed widths: combining accents, legacy accents, tabular glyphs, and spacing glyphs."
 			}

@@ -13,7 +13,7 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "Vertical metrics checker",
+			"name": "Vertical metrics",
 			"version": "1.2.0",
 			"description": "For all masters of selected font, checks if any point falls within the {Zone threshold} (3pts by default.) Uses the following glyphs as reference points for alignment: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o). If small caps exists, also checks small cap capheight (H.sc)"
 			}

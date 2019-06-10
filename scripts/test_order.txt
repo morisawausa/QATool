@@ -1,5 +1,5 @@
-Almost straight checker
-Vertical metrics checker
-Components checker
-Fixed width checker
+Almost straights
+Vertical metrics
+Components
+Fixed width
 OCC character set
