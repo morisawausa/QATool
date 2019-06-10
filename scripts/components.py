@@ -182,14 +182,16 @@ class Script(QATask):
 
 	def run(self, parameters, report):
 		
+		report.note("\n\n[COMPONENT ALIGNMENT]\n")
+
 		self.setup_lists()
 		
 		for p in parameters:
-			report.note("*[COMPONENT ALIGNMENT] %s to %s" % (p[0], p[1]) )
+			report.note("* %s to %s" % (p[0], p[1]) )
 
 		for m in self.masters:
 			alignment_points = self.get_metrics(m, parameters)
-			report.note("\n[COMPONENT ALIGNMENT] * MASTER %s :" % m.name)
+			report.note("\n* MASTER %s :" % m.name)
 
 			for a in alignment_points:
 				report.note( "%s accent line = %i" % (a, alignment_points[a]) )

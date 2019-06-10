@@ -23,12 +23,12 @@ class Script(QATask):
 
 
 	def run(self, parameters, report):
-		
+
 		report.note("\n\n[ALMOST STRAIGHTS]\n")
 
 		skew = parameters[0][1]
 		
-		report.note("\n* Skewed by: %i pts \n" % skew)
+		report.note("* Skewed by: %i pts \n" % skew)
 
 		for m in self.masters:
 			for g in self.glyphs:

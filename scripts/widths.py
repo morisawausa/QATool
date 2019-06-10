@@ -29,6 +29,8 @@ class Script(QATask):
 
 	def run(self, parameters, report):
 
+		report.note("\n\n[TABULAR WIDTH]\n")
+
 		# get units per em
 		upm = self.font.upm
 
@@ -51,10 +53,10 @@ class Script(QATask):
 
 			if "zero.tf" in self.glyphs:
 				tab_width = self.glyphs["zero.tf"].layers[m.id].width
-				report.note("[TABULAR WIDTH] * MASTER %s tab_width = %i\n" %(m.name, tab_width) )
+				report.note("* MASTER %s tabular width = %i\n" %(m.name, tab_width) )
 			else:
 				tab_width = False
-				report.note("[TABULAR WIDTH] Tabular glyphs or zero.tf does not exist")
+				report.note("Tabular glyphs or zero.tf does not exist")
 
 			for g in self.glyphs:
 
