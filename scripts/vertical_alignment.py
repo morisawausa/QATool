@@ -31,28 +31,29 @@ class Script(QATask):
 	
 	def set_metrics(self):
 
-		def ref_nodes(ref):
+		def ref_bounds(ref):
 			glyph = self.glyphs[ref].layers[self.font.selectedFontMaster.id]
-			nodes = []
-			for path in glyph.paths:
-				for node in path.nodes:
-					nodes.append(node.y)
-			return nodes
+			bounds = []
+
+			bounds.append(glyph.bounds.origin.y) #minimum point
+			bounds.append(glyph.bounds.origin.y + glyph.bounds.size.height) #max point
+
+			return bounds
 
 		metrics_dict = {
-		 min(ref_nodes('H')): "baseline", 
-		 min(ref_nodes('O')): "baseline undershoot",
-		 max(ref_nodes('h')): "ascender",
-		 min(ref_nodes('p')): "descender", 
-		 max(ref_nodes('H')): "capheight",
-		 max(ref_nodes('O')): "capheight overshoot",
-		 max(ref_nodes('u')): "xheight",
-		 max(ref_nodes('o')): "xheight overshoot",
+		 "baseline" : min(ref_bounds('H')), 
+		 "baseline undershoot" : min(ref_bounds('O')),
+		 "ascender" : max(ref_bounds('h')),
+		 "descender" : min(ref_bounds('p')), 
+		 "capheight" : max(ref_bounds('H')),
+		 "capheight overshoot" : max(ref_bounds('O')),
+		 "xheight" : max(ref_bounds('u')),
+		 "xheight overshoot" : max(ref_bounds('o')),
 		}
 
 		if self.glyphs["h.sc"] in self.glyphs:
-			metrics_dict[max(ref_nodes('h.sc'))] = "smallcapheight"
-			metrics_dict[max(ref_nodes('o.sc'))] = "smallcapheight overshoot"
+			metrics_dict["smallcapheight"] =  max(ref_bounds('h.sc'))
+			metrics_dict["smallcapheight overshoot"] = max(ref_bounds('o.sc'))
 		
 		return metrics_dict
 
@@ -62,8 +63,8 @@ class Script(QATask):
 
 		metrics = self.set_metrics()
 
-		metrics_output = "\n".join(["%s = %s" % (value, key) for (key, value) in metrics.items()])
-		report.note("\n* Alignments:\n" + metrics_output )
+		metrics_output = "\n".join(["%s = %s" % (key, value) for (key, value) in metrics.items()])
+		report.note("\n* Alignments:\n %s" % metrics_output )
 
 		padding = parameters[0][1]
 		report.note("\n* Buffer: %i\n" % padding)
@@ -74,11 +75,11 @@ class Script(QATask):
 				for path in layer.paths:
 					for node in path.nodes:
 						if node.type == 'line' or node.type == 'curve':
-							if node.y in metrics.keys():
+							if node.y in metrics.values(): # matches metrics line
 								break
 							else:
-								nearest = self.find_nearest(metrics.keys(), node.y)
+								nearest = self.find_nearest(metrics.values(), node.y) # returns metrics nearest to node
 								diff = node.y - nearest
 								if (abs(diff) < padding):
-									report.add(m.name, g.name, 'Vertical metrics', report.node(node) + " is off of the " + metrics[nearest] + " by " + str(diff), passed=False)
+									report.add(m.name, g.name, 'Vertical metrics', "%s is off of the %s by %.1f" %( report.node(node), metrics.keys()[metrics.values().index(nearest)], diff), passed=False)
 

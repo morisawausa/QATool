@@ -1,5 +1,5 @@
 Almost straights
 Vertical metrics
 Components
-Fixed width
+Fixed widths
 OCC character set
