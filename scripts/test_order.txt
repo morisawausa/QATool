@@ -1,5 +1,6 @@
 Almost straights
 Vertical metrics
+Top anchor alignment
 Components
 Fixed widths
 OCC character set
