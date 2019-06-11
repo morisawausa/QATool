@@ -20,7 +20,7 @@ class Script(QATask):
 
 	def parameters(self):
 		parameters = [
-			("Reference", "Agrave"),
+			("Reference", "macron"),
 		]
 
 		return parameters
@@ -66,22 +66,22 @@ class Script(QATask):
 		reference = { }
 		
 		# get reference glyphs
-		ref_glyph_name = parameters[0][1] # i.e. Amacron, glyph name
+		ref_accent_name = parameters[0][1] # i.e. macron
 
-		if ref_glyph_name in self.glyphs:
-			for mark in self.marks["Legacy"]:
-				if ref_glyph_name.endswith(mark):
-					reference_mark = mark # i.e. macron, accent name
+		if ref_accent_name in self.glyphs:
+			# for mark in self.marks["Legacy"]:
+			# 	if ref_glyph_name.endswith(mark):
+			# 		reference_mark = mark # i.e. macron, accent name
 
 			for extension in self.mark_categories:
-				mark_name = "%s%s" %(reference_mark, extension)
+				mark_name = "%s%s" %(ref_accent_name, extension)
 				if mark_name in self.glyphs:
 					# get _top anchor of mark
 					anchor = self.glyphs[mark_name].layers[master.id].anchors['_top']
 					if anchor:
 						reference[self.mark_categories[extension]] = anchor.position
 					else:
-						self.report.note("* %s does not a _top anchor" % mark_name)
+						self.report.note("* %s does not have a _top anchor" % mark_name)
 
 		else:
 			self.report.note("* Reference glyph does not exist in the font")
@@ -118,7 +118,7 @@ class Script(QATask):
 
 		self.setup_lists()
 		
-		report.note("* %s glyph is %s" % (parameters[0][0], parameters[0][1]) )
+		report.note("* %s accent is %s" % (parameters[0][0], parameters[0][1]) )
 
 		for master in self.masters:
 
