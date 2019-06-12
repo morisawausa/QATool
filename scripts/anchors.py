@@ -44,7 +44,10 @@ class Script(QATask):
 		non_floating = ["cedilla", "commaaccent", "ogonek", "caronvert", "horn"]
 		self.ignore = []
 
+		no_accents = ["Aogonek", "B", "Eng", "Eth", "Dcroat", "F", "Germandbls", "Hbar", "Iogonek", "K", "M", "OE", "P", "Q", "Schwa", "Thorn", "Uogonek", "V", "X", "aogonek", "b",  "eng", "eth", "dcroat", "f", "f.calt_nokern", "hbar", "iogonek", "k", "germandbls", "m", "oe", "p", "q", "schwa", "i", "j", "thorn", "longs", "t", "uogonek", "v", "x"]
+
 		self.component_glyphs = []
+
 		self.base_glyphs = []
 
 		
@@ -64,24 +67,20 @@ class Script(QATask):
 							self.marks[self.mark_categories[extension]] = [name]
 						else:
 							self.marks[self.mark_categories[extension]].append(name)
-			# elif g.category == "Mark" and g.subCategory == "Spacing":
-			# 	self.marks["Legacy"].append(name)
 
 
 			# collect glyphs with components and base glyphs
 			if g.category == "Letter" and g.script == "latin":
 				if layer.components:
 					self.component_glyphs.append(g)
-				elif g.subCategory != "Superscript" and g.subCategory != "Ligature":
+				elif g.name not in no_accents and g.subCategory in ("Lowercase", "Uppercase", "Smallcaps"):
 					self.base_glyphs.append(g)
-
-		print self.marks
-
 
 
 	def get_metrics(self, master, parameters):
 		"""Given reference accent, stores the '_top' anchor points of the accent and
-		its case (.case, .sc) counterparts for reference. If """
+		its case (.case, .sc) counterparts for reference. If .case accent does not exist,
+		uses 'top' anchor of letter A for Uppercase reference."""
 		reference = { }
 		
 		# get reference accent
@@ -102,7 +101,7 @@ class Script(QATask):
 				
 			
 			# if .case accents do not exist, use top value for A + accent
-			case_accent = ref_accent_name + ".case"
+			case_accent = ref_accent_name + "comb.case"
 
 			if case_accent not in self.glyphs:
 				self.report.note("(Reference for uppercase accent y position is the top anchor on A, since .case accents don't exist)")
