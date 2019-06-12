@@ -30,7 +30,7 @@ class Script(QATask):
 		"""Collect and categorize diacritic marks and base glyphs"""
 
 		self.marks = { }
-		self.marks["Legacy"] = []
+		# self.marks["Legacy"] = []
 
 		self.mark_categories = { 
 			"comb" : "Lowercase", 
@@ -64,8 +64,8 @@ class Script(QATask):
 							self.marks[self.mark_categories[extension]] = [name]
 						else:
 							self.marks[self.mark_categories[extension]].append(name)
-			elif g.category == "Mark" and g.subCategory == "Spacing":
-				self.marks["Legacy"].append(name)
+			# elif g.category == "Mark" and g.subCategory == "Spacing":
+			# 	self.marks["Legacy"].append(name)
 
 
 			# collect glyphs with components and base glyphs
@@ -75,25 +75,13 @@ class Script(QATask):
 				elif g.subCategory != "Superscript" and g.subCategory != "Ligature":
 					self.base_glyphs.append(g)
 
-
-		# print self.base_glyphs
-		# for g in self.components:
-		# 	base_glyph_name = ""
-		# 	suffix = ""
-		# 	if "." in glyph.name:
-		# 		suffix = "." + glyph.name.split(".", 1)[1]
-		# 		base_glyph_name = "%s%s" %(glyph.name[:1], suffix)
-		# 	else:
-		# 		base_glyph_name = glyph.name[:1]
-
-		# 	print base_glyph_name
-		# 	base_glyph = self.glyphs[base_glyph_name]
+		print self.marks
 
 
 
 	def get_metrics(self, master, parameters):
 		"""Given reference accent, stores the '_top' anchor points of the accent and
-		its case (.case, .sc) counterparts for reference."""
+		its case (.case, .sc) counterparts for reference. If """
 		reference = { }
 		
 		# get reference accent
@@ -111,6 +99,18 @@ class Script(QATask):
 						reference[self.mark_categories[extension]] = anchor.position
 					else:
 						self.report.note("* %s does not have a _top anchor" % mark_name)
+				
+			
+			# if .case accents do not exist, use top value for A + accent
+			case_accent = ref_accent_name + ".case"
+
+			if case_accent not in self.glyphs:
+				self.report.note("(Reference for uppercase accent y position is the top anchor on A, since .case accents don't exist)")
+				anchor = self.glyphs['A'].layers[master.id].anchors['top']
+				if anchor:
+					reference["Uppercase"] = anchor.position
+				else:
+					self.report.note("*'A' does not have a top anchor and cannot be used as an Uppercase reference")
 
 		else:
 			self.report.note("* Reference glyph does not exist in the font")
@@ -162,7 +162,7 @@ class Script(QATask):
 
 
 			# check _top anchor consistency within each mark category
-			for category in alignment_points:
+			for category in self.marks:
 				
 				marks = self.marks[category] # list of marks
 				ref_point = alignment_points[category]	# corresponding accent alignment point	
@@ -182,6 +182,6 @@ class Script(QATask):
 
 				for component in glyph.layers[master.id].components:
 					if not component.automaticAlignment:
-						report.add(master.name, glyph.name, "Automatic Alignment", "%s in %s is not automatically aligned" % (component.name, glyph.name), passed=False )
+						report.add(master.name, glyph.name, "Automatic Alignment", "%s is not automatically aligned" % component.name, passed=False )
 
 
