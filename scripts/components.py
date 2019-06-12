@@ -209,4 +209,4 @@ class Script(QATask):
 				self.check_widths(g, m, comps)
 
 				# check accent alignment consistency
-				self.check_alignment(g, m, comps, alignment_points, report)
+				# self.check_alignment(g, m, comps, alignment_points, report)
