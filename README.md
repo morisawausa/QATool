@@ -78,12 +78,12 @@ class Script(QATask):
 
 	def parameters(self):
 		return [
-			{"Parameter Name": "Default value"}
+			("Parameter Name": "Default value")
 		]
 
 	def run(self, parameters, report):
 
-		default = parameters[0]['Parameter Name']
+		default = parameters[0][1]
 		report.note("\n* Parameter Description: " + default + "\n" )
 
 		for m in self.masters:
@@ -109,12 +109,19 @@ Access the [Glyphs API](https://docu.glyphsapp.com/index.html) for the Glyphs ob
 
 Notes do not inherently have a pass/fail status. They are good for noting parameters and reference points for a test and will appear under `REFERENCE` on the final report output.
 
-
 - `string` (string) any text
 
+
+#### Code
 ```python
-report.note("Parameter Message")
+report.note("* Some message for reference")
 ```
+
+#### Output
+```
+* Some message for reference
+```
+
 
 ### Log a Test Result
 **report.add**(master, glyph, header, desc, passed)
@@ -127,8 +134,33 @@ Use this method when reporting a test result. This logs a line item under `TEST 
 - `desc` (string) The test result description. \* Integers must be a converted to string values for concatenation
 - `passed` (Boolean) Whether the test passes or fails. Set it to `False` for failed tests, `True` for passed tests.
  
+
+#### Code
 ```python
-report.add(m.name, g.name, 'Overkerns', 'Positive kerning above' + str(kern), passed=False)
+report.add(m.name, g.name, 'Overkerns', 'Positive kerning', passed=False)
+```
+
+#### Output
+```
+[Overkerns] Positive kerning
+```
+
+### Format a Point
+**report.node**(GSnode)
+
+Use this method to format Glyphs NSPoint Objects such as points, nodes, anchors, or other objects with x and y values. This should be used within the above Log methods.
+
+- `GSnode` (Glyphs point object) Any NSPoint object
+
+
+#### Code
+```python
+report.add(m.name, g.name, 'Not straight', "/ %s and %s is off on the X by %i pts" % (report.node(point), report.node(prev_point), skew), passed=False )
+```
+
+#### Output
+```
+[Not straight] / (438.0, 240.0) and (439.0, 288.0) is off on the X by 1 pts
 ```
 
 ## Maintenance

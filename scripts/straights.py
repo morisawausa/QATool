@@ -53,6 +53,6 @@ class Script(QATask):
 						
 							if diffX == skew or diffY == skew:
 								if diffX == skew:
-									report.add(m.name, g.name, 'Not straight', "/ " + report.node(point) + " and " + report.node(prev_point) + " is off on the x by %i pts" % skew, passed=False )
+									report.add(m.name, g.name, 'Not straight', "/ %s and %s is off on the X by %i pts" % (report.node(point), report.node(prev_point), skew), passed=False )
 								if diffY == skew:
-									report.add(m.name, g.name, 'Not straight', "- " + report.node(point) + " and " + report.node(prev_point) + " is off on the y by %i pts" % skew, passed=False )
+									report.add(m.name, g.name, 'Not straight', "/ %s and %s is off on the Y by %i pts" % (report.node(point), report.node(prev_point), skew), passed=False )
