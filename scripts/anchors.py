@@ -30,7 +30,6 @@ class Script(QATask):
 		"""Collect and categorize diacritic marks and base glyphs"""
 
 		self.marks = { }
-		# self.marks["Legacy"] = []
 
 		self.mark_categories = { 
 			"comb" : "Lowercase", 
