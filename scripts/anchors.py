@@ -27,7 +27,7 @@ class Script(QATask):
 
 
 	def setup_lists(self):
-		"""Collect and categorize diacritic marks"""
+		"""Collect and categorize diacritic marks and base glyphs"""
 
 		self.marks = { }
 		self.marks["Legacy"] = []
@@ -43,6 +43,10 @@ class Script(QATask):
 
 		non_floating = ["cedilla", "commaaccent", "ogonek", "caronvert", "horn"]
 		self.ignore = []
+
+		self.component_glyphs = []
+		self.base_glyphs = []
+
 		
 		for g in self.glyphs:
 			layer = g.layers[self.font.selectedFontMaster.id]
@@ -64,19 +68,38 @@ class Script(QATask):
 				self.marks["Legacy"].append(name)
 
 
+			# collect glyphs with components and base glyphs
+			if g.category == "Letter" and g.script == "latin":
+				if layer.components:
+					self.component_glyphs.append(g)
+				elif g.subCategory != "Superscript" and g.subCategory != "Ligature":
+					self.base_glyphs.append(g)
+
+
+		# print self.base_glyphs
+		# for g in self.components:
+		# 	base_glyph_name = ""
+		# 	suffix = ""
+		# 	if "." in glyph.name:
+		# 		suffix = "." + glyph.name.split(".", 1)[1]
+		# 		base_glyph_name = "%s%s" %(glyph.name[:1], suffix)
+		# 	else:
+		# 		base_glyph_name = glyph.name[:1]
+
+		# 	print base_glyph_name
+		# 	base_glyph = self.glyphs[base_glyph_name]
+
+
+
 	def get_metrics(self, master, parameters):
 		"""Given reference accent, stores the '_top' anchor points of the accent and
-		its case (.case, .sc) counterparts for reference. If .case accents do not exist,
-		uses top accent position of A + reference accent"""
+		its case (.case, .sc) counterparts for reference."""
 		reference = { }
 		
-		# get reference glyphs
+		# get reference accent
 		ref_accent_name = parameters[0][1] # i.e. macron
 
 		if ref_accent_name in self.glyphs:
-			# for mark in self.marks["Legacy"]:
-			# 	if ref_glyph_name.endswith(mark):
-			# 		reference_mark = mark # i.e. macron, accent name
 
 			for extension in self.mark_categories:
 				mark_name = "%s%s" %(ref_accent_name, extension) #i.e. macroncomb
@@ -89,34 +112,35 @@ class Script(QATask):
 					else:
 						self.report.note("* %s does not have a _top anchor" % mark_name)
 
-
 		else:
 			self.report.note("* Reference glyph does not exist in the font")
 
 		return reference
 
 
-	def check_anchors(self, master, all_marks, points, report):
-		for category in points:
-			# list of marks
-			marks = all_marks[category]
-			ref_point = points[category]				
+	def check_anchors(self, master, glyph_name, ref_point, anchor_type, category, report):
+		"""gets the top anchor of a given glyph and compares it against a reference point
+		of the relevant category
 
-			for mark in marks:
+		:glyph_name: the name of the glyph to look at
+		:ref_point: the alignment point to compare to
+		:anchor_point: anchor_type, i.e. top or _top
+		:category: type of glyph, i.e. Uppercase, Lowercase, or Smallcaps
+		"""
 
-				if mark not in self.ignore: #ignore non-floating marks
-					layer = self.glyphs[mark].layers[master.id]
-					anchor = layer.anchors['_top']
+		layer = self.glyphs[glyph_name].layers[master.id]
+		anchor = layer.anchors[anchor_type]
 
-					if anchor:
-						diffX = anchor.x - ref_point.x
-						diffY = anchor.y - ref_point.y
-
-						if diffX != 0 or diffY != 0:
-							report.add(master.name, mark, "Component Anchors", "_top anchor is off of the %s anchor point by (%.1f, %.1f)" % (category, diffX, diffY), passed=False )
-					else:
-						report.add(master.name, mark, "Component Anchors", "_top anchor does not exist", passed=False )
-	
+		if anchor:
+			diffY = anchor.y - ref_point.y
+			if anchor_type == "_top":
+				diffX = anchor.x - ref_point.x
+				if diffX != 0 or diffY != 0:
+					report.add(master.name, glyph_name, "Top Anchors", "_top anchor is off of the %s anchor point by (%.1f, %.1f)" % (category, diffX, diffY), passed=False )
+			elif diffY != 0:
+				report.add(master.name, glyph_name, "Top Anchors", "top anchor is vertically off of the %s anchor point by %.1f" % (category, diffY), passed=False )			
+		else:
+			report.add(master.name, glyph_name, "Top Anchors", "%s anchor does not exist" % anchor_type, passed=False )
 
 
 	def run(self, parameters, report):
@@ -131,11 +155,33 @@ class Script(QATask):
 
 			report.note("\n* MASTER %s :" % master.name)
 
+			# get alignment points for each mark category
 			alignment_points = self.get_metrics(master, parameters)
-
 			for a in alignment_points:
 				report.note( "%s top anchors should be at %s" % (a, report.node(alignment_points[a]) ) )
 
-			# check top anchor consistency within each mark category
-			self.check_anchors(master, self.marks, alignment_points, report)
+
+			# check _top anchor consistency within each mark category
+			for category in alignment_points:
+				
+				marks = self.marks[category] # list of marks
+				ref_point = alignment_points[category]	# corresponding accent alignment point	
+
+				for mark in marks:
+					if mark not in self.ignore: #ignore non-floating marks
+						self.check_anchors(master, mark, ref_point, "_top", category, report)
+
+
+			# check top anchors of base glyphs
+			for glyph in self.base_glyphs:
+				self.check_anchors(master, glyph.name, alignment_points[glyph.subCategory], "top", glyph.subCategory, report)
+
+
+			# check automatic alignment in component glyphs
+			for glyph in self.component_glyphs:
+
+				for component in glyph.layers[master.id].components:
+					if not component.automaticAlignment:
+						report.add(master.name, glyph.name, "Automatic Alignment", "%s in %s is not automatically aligned" % (component.name, glyph.name), passed=False )
+
 
