@@ -8,16 +8,16 @@ import importlib
 from taskview import OCC_QATaskView
 
 class QAProfile():
-	"""The QAProfile class manages which tasks are activated 
-	and which are inactive, as well as defining custom 
-	parameters for the typeface."""
+	"""The QAProfile class manages
+	- which tasks are activated
+	- parameter values for each task
+	- which masters to run QA."""
 
 	def __init__(self):
 		"""Set up our dictionary of tasks that stores the tasks, its states, and parameters"""
 		self.tasks = dict()
 		self.task_order = list()
 		self.load_scripts()
-
 		self.task_view = OCC_QATaskView()
 
 		self.testCount = 0
@@ -48,6 +48,36 @@ class QAProfile():
 		return self
 
 
+	def load_params(self, task_name, param_index, param_value):
+		"""Load the parameters for the specified QATasks to 
+		from the current font's customParameters fields."""
+
+		# given param index, get name of parameter
+		param_name = self.tasks[task_name]['Parameters'][param_index][0]
+
+		# assign task new parameter in profile
+		self.tasks[task_name]['Parameters'][param_index] = (param_name, param_value)
+
+		return self
+
+
+	def load_masters(self, masters):
+		"""Load activated masters to run QA"""
+		self.master_list = list(Glyphs.font.masters)
+
+		for master_id in masters:
+			if masters[master_id] == 0: #if marked inactive, remove from self.master_list
+				self.master_list.remove(Glyphs.font.masters[master_id])
+
+		return self
+
+
+	def toggle(self, task_name):
+		"""Toggle the active state of a given task"""
+		self.tasks[ task_name ]['State'] = not self.tasks[ task_name ]['State']
+		return self
+
+
 	def run(self):
 		"""Given a pool of available tasks, runs a selection of tasks and reports the result. """
 		Glyphs.clearLog()
@@ -66,61 +96,38 @@ class QAProfile():
 
 				self.testCount += 1
 
-				# execute test and get return (results, notes)
-				results = task_info['Script'].start(task_info['Parameters'])[0]
+				# execute test and get return, list of results and notes
+				run = task_info['Script'].start(task_info['Parameters'], self.master_list)
 				
-				# store test results
+				# store test results on task profile
+				results = run[0]
 				task_info['Results'] = results
 
 				# collect notes
-				self.all_notes.append( task_info['Script'].start(task_info['Parameters'])[1] )
+				self.all_notes.append( run[1] )
 
-				# collect all results for output
-				for m in results:
-					if m in self.all_errors:
-						self.all_errors[m].append(results[m])
+				# collect all results by master for output
+				for master in results:
+					if master in self.all_errors:
+						self.all_errors[master].append(results[master])
 					else:
-						self.all_errors[m] = list()
-						self.all_errors[m].append(results[m])
+						self.all_errors[master] = list()
+						self.all_errors[master].append(results[master])
 
 		
 		if self.testCount == 0:
-			print "\n\n* No tests selected"
+			print "\n\n!! No tests selected"
+		if len(self.master_list) == 0:
+			print "\n\n!! No masters selected"
 		else:
 			# output results
 			self.report_all()
 
 
-	def save(self):
-		"""Save the currently specified QATask parameters to 
-		the current font's customParameters fields."""
-
-		return self
-
-
-	def load_params(self, task_name, param_index, param_value):
-		"""Load the parameters for the specified QATasks to 
-		from the current font's customParameters fields."""
-
-		# given param index, get name of parameter
-		param_name = self.tasks[task_name]['Parameters'][param_index][0]
-
-		# assign task new parameter in profile
-		self.tasks[task_name]['Parameters'][param_index] = (param_name, param_value)
-
-		return self
-
-
-	def toggle(self, task_name):
-		"""Toggle the active state of a given task"""
-		self.tasks[ task_name ]['State'] = not self.tasks[ task_name ]['State']
-		return self
-
-
 	def report_all(self):
 		"""generate final report"""
 		
-		print str(self.testCount) + " tests run\n"
+		print "%s tests run\n" %self.testCount
 
 		output = ""
 

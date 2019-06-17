@@ -10,7 +10,6 @@ class QATask():
 	def __init__(self):
 		self.report = QAReport(self)
 		self.font = Glyphs.font
-		self.masters = self.font.masters
 		self.glyphs = self.font.glyphs
 
 
@@ -29,9 +28,10 @@ class QATask():
 		return list()
 
 
-	def start(self, parameters):
+	def start(self, parameters, master_list):
 		"""Calls run method and stores results in QAReport.
 		Returns QAReport for rendering."""
+		self.masters = master_list
 		self.report = QAReport(self)
 		self.run(parameters, self.report)
 		return self.report.finalize()

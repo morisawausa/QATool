@@ -64,7 +64,7 @@ class Script(QATask):
 		metrics = self.set_metrics()
 
 		metrics_output = "\n".join(["%s = %s" % (key, value) for (key, value) in metrics.items()])
-		report.note("\n* Alignments:\n %s" % metrics_output )
+		report.note("\n* Alignments:\n%s" % metrics_output )
 
 		padding = parameters[0][1]
 		report.note("\n* Buffer: %i\n" % padding)
