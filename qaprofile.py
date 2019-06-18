@@ -116,9 +116,9 @@ class QAProfile():
 
 		
 		if self.testCount == 0:
-			print "\n\n!! No tests selected"
+			print "\n\n⚠️ No tests selected"
 		if len(self.master_list) == 0:
-			print "\n\n!! No masters selected"
+			print "\n\n⚠️ No masters selected"
 		else:
 			# output results
 			self.report_all()
@@ -129,9 +129,9 @@ class QAProfile():
 		
 		print "%s tests run\n" %self.testCount
 
-		output = ""
+		output = u""
 
-		output += "\n\nREFERENCE\n++++++++++++++++++++++++\n\n"
+		output += u"\n\n⚙️ REFERENCE ⚙️\n++++++++++++++++++++++++\n\n"
 
 		# output all notes
 		for n in self.all_notes:
@@ -139,16 +139,16 @@ class QAProfile():
 				output += line + "\n"
 
 
-		output += "\n\nTEST RESULTS\n++++++++++++++++++++++++\n\n"		
+		output += u"\n\n👉 TEST RESULTS 👈\n++++++++++++++++++++++++\n\n"	
 
 		# output all errors by master
 		for master in self.all_errors:
-			output += "\n\n\n\n\n------------------------------------------------------------------------------------------\n" + master + "\n------------------------------------------------------------------------------------------"
+			output += u"\n\n\n\n\n------------------------------------------------------------------------------------------\n📌 %s 📌\n------------------------------------------------------------------------------------------" %master
 			errorGlyphs = {}
 
 			# group all errors by glyph
 			for errors in self.all_errors[master]:
-				# key = e['glyph']
+	
 				for line in errors:
 					key = line['glyph']
 					if key in errorGlyphs:				
@@ -158,10 +158,10 @@ class QAProfile():
 						errorGlyphs[key].append(line)
 
 			for e in errorGlyphs:
-				output += "\n\n" + e + "\n------------\n"
+				output += '\n\n%s\n------------\n' %e
 				for line in errorGlyphs[e]:
-					output += "[" + line['header'] + "] " 
-					output += line['desc'] +'\n'
+					output += "[%s] " %line['header']
+					output += "%s\n" %line['desc']
 
 		print output
 
