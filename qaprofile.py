@@ -126,7 +126,10 @@ class QAProfile():
 
 	def report_all(self):
 		"""generate final report"""
-		
+		master_list =[]
+		for GS_master in Glyphs.font.masters:
+			master_list.append(GS_master.name)
+
 		print "%s tests run\n" %self.testCount
 
 		output = u""
@@ -162,8 +165,18 @@ class QAProfile():
 				for line in errorGlyphs[e]:
 					output += "[%s] " %line['header']
 					output += "%s\n" %line['desc']
+			
+			# output error glyphs in new tab
+			tab_text = "/" + "/".join(errorGlyphs.keys()).decode('utf-8')
+			
+			#get index of master
+			master_index = master_list.index(master)
 
+			#open new tab with master selected
+			Glyphs.font.newTab( tab_text ).masterIndex = master_index
+		
 		print output
+		
 
 
 

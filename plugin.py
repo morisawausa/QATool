@@ -20,7 +20,7 @@ class OCC_QATool():
 			print "\n\n🙌 Welcome to the Occupant QA Tool 🙌\n\n"
 			self.application = OCC_QATaskListView()
 		else:
-			print "There are no fonts open 😕"
+			print "There are no fonts open 😥 Please open a file and run the tool again."
 
 if __name__ == '__main__':
 	tool = OCC_QATool()
