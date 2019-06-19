@@ -171,34 +171,42 @@ class QAProfile():
 
 					for e in errorGlyphs:
 						output += '\n\n%s\n------------\n' %e
+						x = 0
 						for line in errorGlyphs[e]:
 							error = "[%s] %s\n" %(line['header'], line['desc'])
 							output += error
+
+							layer = self.glyphs[e].layers[self.font.masters[master_index].id]
 
 							#add notes to glyphs if they have relevant points
 							node = re.search('\((-?\d*), (-?\d*)\)', line['desc'])
 							if node:
 								x = int(node.group(1))
 								y = int(node.group(2))
-			
-								note = GSAnnotation()
-								note.position = NSPoint(x,y)
-								note.type = TEXT
-								note.text = error
+
 								circle = GSAnnotation()
 								circle.position = NSPoint(x,y)
 								circle.type = CIRCLE
 								circle.width = 30
 
-								layer = self.glyphs[e].layers[self.font.masters[master_index].id]
-								layer.annotations.append(note)
 								layer.annotations.append(circle)
+							else:
+								y = 1200
+
+							note = GSAnnotation()
+							note.position = NSPoint(x,y)
+							note.type = TEXT
+							note.text = error
+							layer.annotations.append(note)
+							x += 600
+							
 					
 					# output error glyphs in new tab
 					tab_text = "/" + "/".join(errorGlyphs.keys()).decode('utf-8')
 					
-					#open new tab with master selected
-					self.font.newTab( tab_text ).masterIndex = master_index
+					# open new tab with master selected
+					if tab_text != "/":
+						self.font.newTab( tab_text ).masterIndex = master_index
 			else:
 				output += u"👏 ALL GOOD 👏"
 		

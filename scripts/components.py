@@ -18,21 +18,19 @@ class Script(QATask):
 	def details(self):
 		return {
 			"name": u"Components",
-			"version": "1.0.0",
-			"description": u"For all masters of selected font, checks:\n - [Component] whether the components correspond with the glyph name \n - [Component Order] order of components \n - [Component Width] whether component glyphs have the same width as its base \n - [Component Alignment] vertical consistency of floating accents measured against {reference glyphs}"
+			"version": "1.2.0",
+			"description": u"Checks:\n - [Component] whether the components correspond with the glyph name \n - [Component Order] order of components \n - [Component Width] whether component glyphs have the same width as its base"
 			}
 
 
 	def parameters(self):
 		parameters = [
-			("Uppercase", 'Agrave'),
-			("Lowercase", 'agrave')
 		]
 
-		# check for small caps
-		if self.glyphs["a.sc"] in self.glyphs:
-			smallcaps = ("Smallcaps", 'agrave.sc')
-			parameters.append(smallcaps)
+		# # check for small caps
+		# if self.glyphs["a.sc"] in self.glyphs:
+		# 	smallcaps = ("Smallcaps", 'agrave.sc')
+		# 	parameters.append(smallcaps)
 		
 		return parameters
 
@@ -73,6 +71,9 @@ class Script(QATask):
 			# compose component names
 			if component.name == "idotless":
 				composed_name += "i"
+				print composed_name
+			elif component.name == "jdotless":
+				composed_name += "j"
 			elif "comb.case" in component.name:
 				composed_name += component.name.replace("comb.case","")
 			elif "comb.sc" in component.name:
@@ -90,7 +91,7 @@ class Script(QATask):
 		# check if it has the right components according to its name
 		if glyph.script == "latin": # only check Latin glyphs
 			if glyph.name != composed_name:
-				self.report.add(master.name, glyph.name, 'Component order', "base glyph is not first", passed=False)
+				self.report.add(master.name, glyph.name, 'Component order', "Check components and / or component order", passed=False)
 		
 
 	def get_components(self, glyph, master):
@@ -123,11 +124,8 @@ class Script(QATask):
 		
 		if 'baseComp' in comps:
 			base_glyph = comps['baseComp'].componentName
-		elif 'base' in comps:
-			base_glyph = comps['base']
-			self.report.add(master.name, glyph.name, "Component", "base glyph is decomposed", passed=False)
 		else:
-			self.report.add(master.name, glyph.name, "Component", "unknown base glyph", passed=False)
+			self.report.add(master.name, glyph.name, "Component", "base glyph is decomposed", passed=False)
 		
 		if base_glyph != "":
 			# get width of base glyph
@@ -139,63 +137,22 @@ class Script(QATask):
 				self.report.add(master.name, glyph.name, "Component width", "Width of %s is off from %s by %i" %(glyph.name, base_glyph, diff), passed=False)
 
 
-	def get_metrics(self, master, parameters):
-		"""Given reference glyphs, stores the bottom-most point of the accent component in reference_metrics.TODO: read in params for ref glyphs"""
-		reference = { }
-		
-		for p in parameters:
-			ref_glyph = p[1]
-			ref_category = p[0]
-
-			if ref_glyph in self.glyphs:
-				glyph = self.glyphs[ ref_glyph ]
-				ref_components = self.get_components(glyph, master)
-
-				if 'accent' in ref_components:
-					reference[ ref_category ] = ref_components['accent'].bounds.origin.y
-				else:
-					self.report.note("⚠️ Reference glyph does not contain a diacritic component")
-
-		return reference
-
-
-	def check_alignment(self, glyph, master, comps, metrics, report):
-		"""Given a component glyph, checks the bottom alignment of its accent to a given reference glyph"""
-
-		# check only latin accents
-		if glyph.script == "latin":
-
-			# if component is an accent
-			if 'accent' in comps:
-
-				# if there is a reference metric for the glyph category
-				if glyph.subCategory in metrics:
-
-					diff = comps['accent'].bounds.origin.y - metrics[ glyph.subCategory ]
-					if diff != 0:
-						report.add(master.name, glyph.name, "Component alignment", comps['accent'].name + " is off of the accent line by " + str(diff), passed=False)
-				else:
-					report.note("⚠️ Reference point for " + glyph.name + " in category [" + glyph.subCategory + "] is missing")
-			else:
-				report.add(master.name, glyph.name, "Component", "Note: accent component is missing or decomposed", passed=False)
-
-
 
 	def run(self, parameters, report):
 		
-		report.note("\n\n[COMPONENT ALIGNMENT]\n")
+		report.note("\n\n[COMPONENTS]\n")
 
 		self.setup_lists()
 		
-		for p in parameters:
-			report.note("* %s to %s" % (p[0], p[1]) )
+		# for p in parameters:
+		# 	report.note("* %s to %s" % (p[0], p[1]) )
 
 		for m in self.masters:
-			alignment_points = self.get_metrics(m, parameters)
-			report.note("\n* MASTER %s :" % m.name)
+			# alignment_points = self.get_metrics(m, parameters)
+			# report.note("\n* MASTER %s :" % m.name)
 
-			for a in alignment_points:
-				report.note( "%s accent line = %i" % (a, alignment_points[a]) )
+			# for a in alignment_points:
+			# 	report.note( "%s accent line = %i" % (a, alignment_points[a]) )
 
 			for g in self.component_glyphs:
 
@@ -206,7 +163,7 @@ class Script(QATask):
 				comps = self.get_components(g, m)
 
 				# check width consistency
-				self.check_widths(g, m, comps)
+				if (g.subCategory != 'Ligature'):
+					self.check_widths(g, m, comps)
 
-				# check accent alignment consistency
-				# self.check_alignment(g, m, comps, alignment_points, report)
+
