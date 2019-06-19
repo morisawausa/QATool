@@ -89,6 +89,11 @@ class OCC_QATaskListView():
 			checkbox = CheckBox((columns[x], rows[i%3], -10, 20), master.name, callback=self.create_master_callback(master.id), value=True)			
 			setattr(self.w.masters, attrName, checkbox)
 
+
+		# set up note clearing buttons
+		self.w.clearNotesButton = Button((padding, -90, 140, 20), "Clear all test notes", callback=self.clear_notes)
+		self.w.clearNoteButton = Button((160, -90, 280, 20), "Clear notes on current layer", callback=self.clear_note)
+
 		# set up Run button
 		self.w.runAllButton = SquareButton((padding, -55, -padding, 40), "Run Selected Tests", callback=self.run_profile)
 
@@ -199,8 +204,23 @@ class OCC_QATaskListView():
 		pass
 
 
+	def clear_note(self, sender):
+		"""clears notes on selected glyph"""
+		layer = Glyphs.font.selectedLayers[0]
+		layer.annotations = None
+
+
+	def clear_notes(self, sender):
+		"""clears all notes"""
+		for g in Glyphs.font.glyphs:
+			for layer in g.layers:
+				layer.annotations = None
+
+		
+
 	def run_profile(self, sender):
 		"""looks at current profile and runs all tasks"""
+		# self.clear_notes()
 		self.profile.load_masters(self.master_queue)
 		self.profile.run()
 		pass

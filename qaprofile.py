@@ -4,6 +4,8 @@ from GlyphsApp import *
 from vanilla import *
 import os
 import importlib
+import re
+from Foundation import NSPoint
 
 from taskview import OCC_QATaskView
 
@@ -21,6 +23,8 @@ class QAProfile():
 		self.task_view = OCC_QATaskView()
 
 		self.testCount = 0
+		self.font = Glyphs.font
+		self.glyphs = self.font.glyphs
 
 
 	def load_scripts(self):
@@ -127,7 +131,7 @@ class QAProfile():
 	def report_all(self):
 		"""generate final report"""
 		master_list =[]
-		for GS_master in Glyphs.font.masters:
+		for GS_master in self.font.masters:
 			master_list.append(GS_master.name)
 
 		print "%s tests run\n" %self.testCount
@@ -146,6 +150,9 @@ class QAProfile():
 
 		# output all errors by master
 		for master in self.all_errors:
+			#get index of master
+			master_index = master_list.index(master)
+
 			output += u"\n\n\n\n\n------------------------------------------------------------------------------------------\n📌 %s 📌\n------------------------------------------------------------------------------------------" %master
 			errorGlyphs = {}
 
@@ -165,15 +172,32 @@ class QAProfile():
 				for line in errorGlyphs[e]:
 					output += "[%s] " %line['header']
 					output += "%s\n" %line['desc']
+
+					#add notes to glyphs
+					node = re.search('\((\d*), (\d*)\)', line['desc'])
+					if node:
+						x = int(node.group(1))
+						y = int(node.group(2))
+	
+						note = GSAnnotation()
+						note.position = NSPoint(x,y)
+						note.type = TEXT
+						note.text = line['header']
+						circle = GSAnnotation()
+						circle.position = NSPoint(x,y)
+						circle.type = CIRCLE
+						circle.width = 30
+
+						layer = self.glyphs[e].layers[self.font.masters[master_index].id]
+						layer.annotations.append(note)
+						layer.annotations.append(circle)
 			
 			# output error glyphs in new tab
 			tab_text = "/" + "/".join(errorGlyphs.keys()).decode('utf-8')
 			
-			#get index of master
-			master_index = master_list.index(master)
 
 			#open new tab with master selected
-			Glyphs.font.newTab( tab_text ).masterIndex = master_index
+			self.font.newTab( tab_text ).masterIndex = master_index
 		
 		print output
 		

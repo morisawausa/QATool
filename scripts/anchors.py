@@ -14,7 +14,7 @@ class Script(QATask):
 		return {
 			"name": "Top anchor alignment",
 			"version": "1.3.0",
-			"description": "Checks the consistency of top anchors for floating accents, for Uppercase, Lowercase, and Smallcaps (if they exist) based off of the _top anchor of accent entered in the Parameters. Uses the top anchor of capital 'A' as reference point if .case accents don't exist."
+			"description": "Checks the consistency of top anchors for floating accents, for Uppercase, Lowercase, and Smallcaps (if they exist) based off of the [_top] anchor of accent entered in the Parameters. Uses the [top] anchor of capital 'A' as reference point if .case accents don't exist."
 			}
 
 
@@ -134,9 +134,9 @@ class Script(QATask):
 			if anchor_type == "_top":
 				diffX = anchor.x - ref_point.x
 				if diffX != 0 or diffY != 0:
-					report.add(master.name, glyph_name, "Top Anchors", "_top anchor is off of the %s anchor point by (%.1f, %.1f)" % (category, diffX, diffY), passed=False )
+					report.add(master.name, glyph_name, "Top Anchors", "_top anchor is off of the %s anchor point by (%i, %i)" % (category, diffX, diffY), passed=False )
 			elif diffY != 0:
-				report.add(master.name, glyph_name, "Top Anchors", "top anchor is vertically off of the %s anchor point by %.1f" % (category, diffY), passed=False )			
+				report.add(master.name, glyph_name, "Top Anchors", "top anchor is vertically off of the %s anchor point by %i" % (category, diffY), passed=False )			
 		else:
 			report.add(master.name, glyph_name, "Top Anchors", "%s anchor does not exist" % anchor_type, passed=False )
 

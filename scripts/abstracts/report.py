@@ -42,7 +42,7 @@ class QAReport( ):
 
 	def node(self, GSnode):
 		"""Formats GS Node into human-readable point coordinates"""
-		return "(%.1f, %.1f)" %(GSnode.x, GSnode.y)
+		return "(%i, %i)" %(GSnode.x, GSnode.y)
 
 
 	def finalize(self):
