@@ -12,9 +12,9 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "Top anchor alignment",
+			"name": u"Top anchor alignment",
 			"version": "1.3.0",
-			"description": "Checks the consistency of top anchors for floating accents, for Uppercase, Lowercase, and Smallcaps (if they exist) based off of the [_top] anchor of accent entered in the Parameters. Uses the [top] anchor of capital 'A' as reference point if .case accents don't exist."
+			"description": u"Checks the consistency of top anchors for floating accents, for Latin Uppercase, Lowercase, and Smallcaps (if they exist) based off of the [_top] anchor of ⚙️ Reference accent. Uses the [top] anchor of capital 'A' as reference point if .case accents don't exist."
 			}
 
 

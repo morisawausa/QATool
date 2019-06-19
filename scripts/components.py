@@ -17,9 +17,9 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "Components",
+			"name": u"Components",
 			"version": "1.0.0",
-			"description": "For all masters of selected font, checks:\n - [Component] whether the components correspond with the glyph name \n - [Component Order] order of components \n - [Component Width] whether component glyphs have the same width as its base \n - [Component Alignment] vertical consistency of floating accents measured against {reference glyphs}"
+			"description": u"For all masters of selected font, checks:\n - [Component] whether the components correspond with the glyph name \n - [Component Order] order of components \n - [Component Width] whether component glyphs have the same width as its base \n - [Component Alignment] vertical consistency of floating accents measured against {reference glyphs}"
 			}
 
 

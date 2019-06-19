@@ -170,11 +170,11 @@ class QAProfile():
 			for e in errorGlyphs:
 				output += '\n\n%s\n------------\n' %e
 				for line in errorGlyphs[e]:
-					output += "[%s] " %line['header']
-					output += "%s\n" %line['desc']
+					error = "[%s] %s\n" %(line['header'], line['desc'])
+					output += error
 
 					#add notes to glyphs
-					node = re.search('\((\d*), (\d*)\)', line['desc'])
+					node = re.search('\((-?\d*), (-?\d*)\)', line['desc'])
 					if node:
 						x = int(node.group(1))
 						y = int(node.group(2))
@@ -182,7 +182,7 @@ class QAProfile():
 						note = GSAnnotation()
 						note.position = NSPoint(x,y)
 						note.type = TEXT
-						note.text = line['header']
+						note.text = error
 						circle = GSAnnotation()
 						circle.position = NSPoint(x,y)
 						circle.type = CIRCLE

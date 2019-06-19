@@ -10,9 +10,9 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "Almost straights",
+			"name": u"Almost straights",
 			"version": "1.0.0",
-			"description": "For all masters of selected font, checks if any consecutive points are off by the {Skew threshold} (1pt by default.)"
+			"description": u"For all masters of selected font, checks if any consecutive points are off by the ⚙️Skew threshold (1pt by default.)"
 			}
 
 

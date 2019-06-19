@@ -12,9 +12,9 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "OCC character set",
+			"name": u"OCC character set",
 			"version": "1.0.0",
-			"description": "Checks font glyphs against the required OCC character set"
+			"description": u"Checks font glyphs against the required OCC character set"
 			}
 
 

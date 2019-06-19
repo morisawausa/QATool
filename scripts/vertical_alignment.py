@@ -13,9 +13,9 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": "Vertical metrics",
+			"name": u"Vertical metrics",
 			"version": "1.2.0",
-			"description": "For all masters of selected font, checks if any point falls within the {Zone threshold} (3pts by default.) Uses the following glyphs as reference points for alignment: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o). If small caps exists, also checks small cap capheight (H.sc)"
+			"description": u"Checks if any point falls within the ⚙️Zone threshold (3pts by default.) Uses the following glyphs for reference: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o). If small caps exists, also checks small cap capheight (H.sc)"
 			}
 
 
@@ -81,5 +81,5 @@ class Script(QATask):
 								nearest = self.find_nearest(metrics.values(), node.y) # returns metrics nearest to node
 								diff = node.y - nearest
 								if (abs(diff) < padding):
-									report.add(m.name, g.name, 'Vertical metrics', "%s is off of the %s by %.1f" %( report.node(node), metrics.keys()[metrics.values().index(nearest)], diff), passed=False)
+									report.add(m.name, g.name, 'Vertical metrics', "%s is off of the %s by %i" %( report.node(node), metrics.keys()[metrics.values().index(nearest)], diff), passed=False)
 

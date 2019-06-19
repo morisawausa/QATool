@@ -23,7 +23,7 @@ class OCC_QATaskListView():
 	def render(self):
 		"""draw entire application"""
 		padding = 15
-		self.w = Window((600, 700), "Occupant QA")
+		self.w = Window((600, 700), "Occupant QA", minSize=(450, 700), maxSize=None,)
 
 		# setup tasks to display in the list view per the task order
 		self.items = list()
@@ -92,7 +92,7 @@ class OCC_QATaskListView():
 
 		# set up note clearing buttons
 		self.w.clearNotesButton = Button((padding, -90, 140, 20), "Clear all test notes", callback=self.clear_notes)
-		self.w.clearNoteButton = Button((160, -90, 280, 20), "Clear notes on current layer", callback=self.clear_note)
+		self.w.clearNoteButton = Button((160, -90, 275, 20), "Clear notes on current layer", callback=self.clear_note)
 
 		# set up Run button
 		self.w.runAllButton = SquareButton((padding, -55, -padding, 40), "Run Selected Tests", callback=self.run_profile)
