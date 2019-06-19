@@ -38,7 +38,7 @@ class Script(QATask):
 		
 		report.note( "%i glyphs total\n-----------------------------------------\n" % len(self.glyphs))
 
-		report.note( "%i missing glyphs\n-----------------------------------------" % len(missing))
+		report.note( "⚠️ %i missing glyphs\n-----------------------------------------" % len(missing))
 		missing_output =""
 		for g in missing:
 			missing_output += g + "\n"

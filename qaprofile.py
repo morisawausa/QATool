@@ -138,66 +138,69 @@ class QAProfile():
 
 		output = u""
 
-		output += u"\n\n⚙️ REFERENCE ⚙️\n++++++++++++++++++++++++\n\n"
+		if self.all_notes or self.all_errors:
 
-		# output all notes
-		for n in self.all_notes:
-			for line in n:
-				output += line + "\n"
+			output += u"\n\n⚙️ REFERENCE ⚙️\n++++++++++++++++++++++++\n\n"
 
+			# output all notes
+			for n in self.all_notes:
+				for line in n:
+					output += line + "\n"
 
-		output += u"\n\n👉 TEST RESULTS 👈\n++++++++++++++++++++++++\n\n"	
+			if self.all_errors:
+				output += u"\n\n👉 TEST RESULTS 👈\n++++++++++++++++++++++++\n\n"	
 
-		# output all errors by master
-		for master in self.all_errors:
-			#get index of master
-			master_index = master_list.index(master)
+				# output all errors by master
+				for master in self.all_errors:
+					#get index of master
+					master_index = master_list.index(master)
 
-			output += u"\n\n\n\n\n------------------------------------------------------------------------------------------\n📌 %s 📌\n------------------------------------------------------------------------------------------" %master
-			errorGlyphs = {}
+					output += u"\n\n\n\n\n------------------------------------------------------------------------------------------\n📌 %s 📌\n------------------------------------------------------------------------------------------" %master
+					errorGlyphs = {}
 
-			# group all errors by glyph
-			for errors in self.all_errors[master]:
-	
-				for line in errors:
-					key = line['glyph']
-					if key in errorGlyphs:				
-						errorGlyphs[key].append(line)
-					else:
-						errorGlyphs[key] = list()
-						errorGlyphs[key].append(line)
-
-			for e in errorGlyphs:
-				output += '\n\n%s\n------------\n' %e
-				for line in errorGlyphs[e]:
-					error = "[%s] %s\n" %(line['header'], line['desc'])
-					output += error
-
-					#add notes to glyphs
-					node = re.search('\((-?\d*), (-?\d*)\)', line['desc'])
-					if node:
-						x = int(node.group(1))
-						y = int(node.group(2))
-	
-						note = GSAnnotation()
-						note.position = NSPoint(x,y)
-						note.type = TEXT
-						note.text = error
-						circle = GSAnnotation()
-						circle.position = NSPoint(x,y)
-						circle.type = CIRCLE
-						circle.width = 30
-
-						layer = self.glyphs[e].layers[self.font.masters[master_index].id]
-						layer.annotations.append(note)
-						layer.annotations.append(circle)
+					# group all errors by glyph
+					for errors in self.all_errors[master]:
 			
-			# output error glyphs in new tab
-			tab_text = "/" + "/".join(errorGlyphs.keys()).decode('utf-8')
-			
+						for line in errors:
+							key = line['glyph']
+							if key in errorGlyphs:				
+								errorGlyphs[key].append(line)
+							else:
+								errorGlyphs[key] = list()
+								errorGlyphs[key].append(line)
 
-			#open new tab with master selected
-			self.font.newTab( tab_text ).masterIndex = master_index
+					for e in errorGlyphs:
+						output += '\n\n%s\n------------\n' %e
+						for line in errorGlyphs[e]:
+							error = "[%s] %s\n" %(line['header'], line['desc'])
+							output += error
+
+							#add notes to glyphs if they have relevant points
+							node = re.search('\((-?\d*), (-?\d*)\)', line['desc'])
+							if node:
+								x = int(node.group(1))
+								y = int(node.group(2))
+			
+								note = GSAnnotation()
+								note.position = NSPoint(x,y)
+								note.type = TEXT
+								note.text = error
+								circle = GSAnnotation()
+								circle.position = NSPoint(x,y)
+								circle.type = CIRCLE
+								circle.width = 30
+
+								layer = self.glyphs[e].layers[self.font.masters[master_index].id]
+								layer.annotations.append(note)
+								layer.annotations.append(circle)
+					
+					# output error glyphs in new tab
+					tab_text = "/" + "/".join(errorGlyphs.keys()).decode('utf-8')
+					
+					#open new tab with master selected
+					self.font.newTab( tab_text ).masterIndex = master_index
+			else:
+				output += u"👏 ALL GOOD 👏"
 		
 		print output
 		

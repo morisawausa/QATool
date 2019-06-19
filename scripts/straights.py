@@ -12,7 +12,7 @@ class Script(QATask):
 		return {
 			"name": u"Almost straights",
 			"version": "1.0.0",
-			"description": u"For all masters of selected font, checks if any consecutive points are off by the ⚙️Skew threshold (1pt by default.)"
+			"description": u"Checks if any consecutive points are off by the ⚙️Skew threshold (1pt by default.)"
 			}
 
 

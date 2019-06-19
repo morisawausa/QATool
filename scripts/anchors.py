@@ -134,9 +134,9 @@ class Script(QATask):
 			if anchor_type == "_top":
 				diffX = anchor.x - ref_point.x
 				if diffX != 0 or diffY != 0:
-					report.add(master.name, glyph_name, "Top Anchors", "_top anchor is off of the %s anchor point by (%i, %i)" % (category, diffX, diffY), passed=False )
+					report.add(master.name, glyph_name, "Top Anchors", "_top anchor at %s is off of the %s anchor point by (%i, %i)" % (report.node(anchor), category, diffX, diffY), passed=False )
 			elif diffY != 0:
-				report.add(master.name, glyph_name, "Top Anchors", "top anchor is vertically off of the %s anchor point by %i" % (category, diffY), passed=False )			
+				report.add(master.name, glyph_name, "Top Anchors", "top anchor at %s is vertically off of the %s anchor point by %i" % (report.node(anchor), category, diffY), passed=False )			
 		else:
 			report.add(master.name, glyph_name, "Top Anchors", "%s anchor does not exist" % anchor_type, passed=False )
 

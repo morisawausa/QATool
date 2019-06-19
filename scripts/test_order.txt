@@ -3,4 +3,5 @@ Vertical metrics
 Top anchor alignment
 Components
 Fixed widths
+Global metrics
 OCC character set

@@ -46,12 +46,12 @@ class OCC_QATaskListView():
 
 		detail_height = 150
 		# set up detail view
-		self.w.details = Box((padding, list_height+padding, -padding, detail_height), "Details")
+		self.w.details = Box((padding, list_height+padding, -padding, detail_height), u"Details")
 		self.w.details.text = TextBox((5, 5, -5, -5), "Test Details Placeholder")
 
 		box_height = 100
 		# set up parameter placeholders (maximum 3)
-		self.w.params = Box((padding, list_height+detail_height+padding*2, -padding, box_height), "Parameters")
+		self.w.params = Box((padding, list_height+detail_height+padding*2, -padding, box_height), u"Parameters")
 
 		self.w.params.param0 = Group((5,10,-5,25))
 		self.w.params.param0.input = EditText((0, 0, 100, -0), callback=self.create_param_callback(0))
@@ -90,12 +90,12 @@ class OCC_QATaskListView():
 			setattr(self.w.masters, attrName, checkbox)
 
 
-		# set up note clearing buttons
-		self.w.clearNotesButton = Button((padding, -90, 140, 20), "Clear all test notes", callback=self.clear_notes)
-		self.w.clearNoteButton = Button((160, -90, 275, 20), "Clear notes on current layer", callback=self.clear_note)
+		# set up note clearing buttons	
+		self.w.clearNotesButton = Button((padding, -90, 280, 20), u"Clear all notes", callback=self.clear_notes)
+		self.w.clearNoteButton = Button((305, -90, 280, 20), u"Clear notes on current layer", callback=self.clear_note)
 
 		# set up Run button
-		self.w.runAllButton = SquareButton((padding, -55, -padding, 40), "Run Selected Tests", callback=self.run_profile)
+		self.w.runAllButton = SquareButton((padding, -55, -padding, 40), u"👉 Run Selected Tests 👈", callback=self.run_profile)
 
 		# select the first task
 		self.select_task(self.w.list) 

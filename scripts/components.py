@@ -136,7 +136,7 @@ class Script(QATask):
 			# check if the composed glyph width matches the width of its base glyph
 			diff = base_width - width
 			if diff != 0:
-				self.report.add(master.name, glyph.name, "Component width", 'Width of ' + glyph.name + ' is off from ' + base_glyph + " by " + str(diff), passed=False)
+				self.report.add(master.name, glyph.name, "Component width", "Width of %s is off from %s by %i" %(glyph.name, base_glyph, diff), passed=False)
 
 
 	def get_metrics(self, master, parameters):
@@ -154,7 +154,7 @@ class Script(QATask):
 				if 'accent' in ref_components:
 					reference[ ref_category ] = ref_components['accent'].bounds.origin.y
 				else:
-					self.report.note("Reference glyph does not contain a diacritic component")
+					self.report.note("⚠️ Reference glyph does not contain a diacritic component")
 
 		return reference
 
@@ -175,7 +175,7 @@ class Script(QATask):
 					if diff != 0:
 						report.add(master.name, glyph.name, "Component alignment", comps['accent'].name + " is off of the accent line by " + str(diff), passed=False)
 				else:
-					report.note("Reference point for " + glyph.name + " in category [" + glyph.subCategory + "] is missing")
+					report.note("⚠️ Reference point for " + glyph.name + " in category [" + glyph.subCategory + "] is missing")
 			else:
 				report.add(master.name, glyph.name, "Component", "Note: accent component is missing or decomposed", passed=False)
 
