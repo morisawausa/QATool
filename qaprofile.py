@@ -207,7 +207,7 @@ class QAProfile():
 					# open new tab with master selected
 					if tab_text != "/":
 						self.font.newTab( tab_text ).masterIndex = master_index
-			else:
+			elif not self.all_notes:
 				output += u"👏 ALL GOOD 👏"
 		
 		print output

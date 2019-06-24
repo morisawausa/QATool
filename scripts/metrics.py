@@ -55,7 +55,7 @@ class Script(QATask):
 		if sum_check == 1000:
 			reference += u"|ascender| + |descender| = 1000 👍\n"
 		else:
-			reference += u"⚠️ |ascender| + |descender| != 1000\n"
+			reference += u"⚠️ |ascender| and |descender| does not add up to 1000\n"
 
 		# output
 		report.note(reference)
