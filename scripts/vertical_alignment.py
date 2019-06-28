@@ -29,10 +29,10 @@ class Script(QATask):
 		idx = (np.abs(array - value)).argmin()
 		return array[idx]
 	
-	def set_metrics(self):
+	def set_metrics(self, master):
 
 		def ref_bounds(ref):
-			glyph = self.glyphs[ref].layers[self.font.selectedFontMaster.id]
+			glyph = self.glyphs[ref].layers[master.id]
 			bounds = []
 
 			bounds.append(glyph.bounds.origin.y) #minimum point
@@ -61,23 +61,20 @@ class Script(QATask):
 
 		report.note("\n\n[VERTICAL METRICS]\n")
 
-		metrics = self.set_metrics()
-
-		metrics_output = "\n".join(["%s = %s" % (key, value) for (key, value) in metrics.items()])
-		report.note("\n* Alignments:\n%s" % metrics_output )
-
 		padding = parameters[0][1]
 		report.note("\n* Buffer: %i\n" % padding)
 
 		for m in self.masters:
+			metrics = self.set_metrics(m)
+			metrics_output = "\n".join(["%s = %s" % (key, value) for (key, value) in sorted(metrics.items())])
+			report.note("\n* %s alignment points:\n%s" % (m.name, metrics_output) )
+
 			for g in self.glyphs:
 				layer =  g.layers[m.id]
 				for path in layer.paths:
 					for node in path.nodes:
 						if node.type == 'line' or node.type == 'curve':
-							if node.y in metrics.values(): # matches metrics line
-								break
-							else:
+							if node.y not in metrics.values():
 								nearest = self.find_nearest(metrics.values(), node.y) # returns metrics nearest to node
 								diff = node.y - nearest
 								if (abs(diff) < padding):
