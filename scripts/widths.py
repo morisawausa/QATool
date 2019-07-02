@@ -43,9 +43,7 @@ class Script(QATask):
 			"fourperemspace" : .25,
 			"sixperemspace" : .166,
 			"thinspace" : .166,
-			"hairspace" : .1,
-			"zerowidthspace" : 0,
-			"zerowidthnobreakspace" : 0,
+			"hairspace" : .1
 		}
 
 
@@ -62,14 +60,14 @@ class Script(QATask):
 
 				width = g.layers[m.id].width
 
-				if g.subCategory=="Nonspacing":
+				if g.subCategory=="Nonspacing" or "zerowidth" in g.name:
 					if width != 0:
 						report.add(m.name, g.name, "Zero width", g.name + " has a non-zero width", passed=False)
-				if g.name.endswith(".tf") or g.subCategory=="Spacing" or g.name == "figurespace":
+				elif g.name.endswith(".tf") or g.subCategory=="Spacing" or g.name == "figurespace":
 					if tab_width:
 						if width != tab_width:
 							report.add(m.name, g.name, "Tabular width", g.name + " is off of the tab width by " + str(tab_width-width), passed=False)
-				if g.name in spaces:
+				elif g.name in spaces:
 					space_width = upm * spaces[g.name]
 					if width != space_width:
 						report.add(m.name, g.name, "Space width", g.name + " is off of the space width by " + str(tab_width-width), passed=False)
