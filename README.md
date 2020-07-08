@@ -126,7 +126,9 @@ report.note("* Some message for reference")
 ### Log a Test Result
 **report.add**(master, glyph, header, desc, passed)
 
-Use this method when reporting a test result. This logs a line item under `TEST RESULTS` on the final report output.
+Use this method when reporting a test result. This does 2 things: 
+1. Logs a line item under `TEST RESULTS` on the final report output.
+2. Adds the description text as an annotation onto the glyph. If there is a specific point included in the description, it will attach the annotation to that point; if not, it will attach the annotation at the top left corner of the glyph.
 
 - `master` (string) The name of the master
 - `glyph` (string) The name of the glyph 
@@ -145,7 +147,9 @@ report.add(m.name, g.name, 'Overkerns', 'Positive kerning', passed=False)
 [Overkerns] Positive kerning
 ```
 
-### Format a Point
+
+
+### Helper: Format a Point
 **report.node**(GSnode)
 
 Use this method to format Glyphs NSPoint Objects such as points, nodes, anchors, or other objects with x and y values. This should be used within the above Log methods.
@@ -162,6 +166,7 @@ report.add(m.name, g.name, 'Not straight', "/ %s and %s is off on the X by %i pt
 ```
 [Not straight] / (438.0, 240.0) and (439.0, 288.0) is off on the X by 1 pts
 ```
+
 
 ## Maintenance
 
