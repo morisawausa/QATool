@@ -13,8 +13,8 @@ class Script(QATask):
 	def details(self):
 		return {
 			"name": u"Top anchor alignment",
-			"version": "1.3.0",
-			"description": u"Checks the consistency of top anchors for floating accents, for Latin Uppercase, Lowercase, and Smallcaps (if they exist) based off of the [_top] anchor of ⚙️ Reference accent. Uses the [top] anchor of capital 'A' as reference point if .case accents don't exist."
+			"version": "1.4",
+			"description": u"Checks the consistency of top anchors for floating accents, for Latin Uppercase, Lowercase, and Smallcaps (if they exist) based off of the [_top] anchor of ⚙️ Reference accent. Uses the [top] anchor of capital 'A / a.sc' as reference point if case accents don't exist."
 			}
 
 
@@ -31,13 +31,19 @@ class Script(QATask):
 
 		self.marks = { }
 
+		self.sc_key = "Smallcaps"
+
+		if ( self.glyphs["a.sc"] is not None):
+			self.sc_key = self.glyphs["a.sc"].subCategory
+			print('sckey', self.sc_key)
+
 		self.mark_categories = { 
 			"comb" : "Lowercase", 
 			"comb.case" : "Uppercase",
-			"comb.sc" : "Smallcaps",
+			"comb.sc" : self.sc_key,
 			"comb.narrow" : "Lowercase",
 			"comb.narrow.case" : "Uppercase",
-			"comb.sc.narrow" : "Smallcaps"
+			"comb.sc.narrow" : self.sc_key
 		}
 
 		non_floating = ["cedilla", "commaaccent", "ogonek", "caronvert", "horn"]
@@ -72,7 +78,7 @@ class Script(QATask):
 			if g.category == "Letter" and g.script == "latin":
 				if layer.components:
 					self.component_glyphs.append(g)
-				elif g.name not in no_accents and g.subCategory in ("Lowercase", "Uppercase", "Smallcaps"):
+				elif g.name not in no_accents and g.subCategory in ("Lowercase", "Uppercase", self.sc_key):
 					self.base_glyphs.append(g)
 
 
@@ -99,8 +105,10 @@ class Script(QATask):
 						self.report.note("* %s does not have a _top anchor" % mark_name)
 				
 			
-			# if .case accents do not exist, use top value for A + accent
+			# if .case accents do not exist, use top anchor position for A for Uppercase
+			# if .sc accents do not exist, use top anchor position for a.sc for Smallcaps
 			case_accent = ref_accent_name + "comb.case"
+			sc_accent = ref_accent_name + "comb.sc"
 
 			if case_accent not in self.glyphs:
 				self.report.note("(Reference for uppercase accent y position is the top anchor on A, since .case accents don't exist)")
@@ -109,6 +117,14 @@ class Script(QATask):
 					reference["Uppercase"] = anchor.position
 				else:
 					self.report.note("*'A' does not have a top anchor and cannot be used as an Uppercase reference")
+
+			if sc_accent not in self.glyphs:
+				self.report.note("(Reference for smallcaps accent y position is the top anchor on a.sc, since .sc accents don't exist)")
+				scanchor = self.glyphs['a.sc'].layers[master.id].anchors['top']
+				if scanchor:
+					reference[self.sc_key] = scanchor.position
+				else:
+					self.report.note("*'a.sc' does not have a top anchor and cannot be used as a Smallcaps reference")
 
 		else:
 			self.report.note("* Reference glyph does not exist in the font")
@@ -155,24 +171,28 @@ class Script(QATask):
 
 			# get alignment points for each mark category
 			alignment_points = self.get_metrics(master, parameters)
-			for a in alignment_points:
-				report.note( "%s top anchors should be at %s" % (a, report.node(alignment_points[a]) ) )
 
+			if alignment_points is not {}:
 
-			# check _top anchor consistency within each mark category
-			for category in self.marks:
-				
-				marks = self.marks[category] # list of marks
-				ref_point = alignment_points[category]	# corresponding accent alignment point	
+				for a in alignment_points:
+					report.note( "%s top anchors should be at %s" % (a, report.node(alignment_points[a]) ) )
 
-				for mark in marks:
-					if mark not in self.ignore: #ignore non-floating marks
-						self.check_anchors(master, mark, ref_point, "_top", category, report)
+				# check _top anchor consistency within each mark category
+				for category in self.marks:
+					marks = self.marks[category]  # list of marks
 
+					try: 
+						ref_point = alignment_points[category] # corresponding accent alignment point	
+					except:
+						print ('error for', category) 
+					else:
+						for mark in marks:
+							if mark not in self.ignore: #ignore non-floating marks
+								self.check_anchors(master, mark, ref_point, "_top", category, report)
 
-			# check top anchors of base glyphs
-			for glyph in self.base_glyphs:
-				self.check_anchors(master, glyph.name, alignment_points[glyph.subCategory], "top", glyph.subCategory, report)
+				# check top anchors of base glyphs
+				for glyph in self.base_glyphs:
+					self.check_anchors(master, glyph.name, alignment_points[glyph.subCategory], "top", glyph.subCategory, report)
 
 
 			# check automatic alignment in component glyphs
