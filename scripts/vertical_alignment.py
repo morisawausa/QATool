@@ -7,8 +7,8 @@ from abstracts.task import QATask
 import numpy as np
 
 class Script(QATask):
-	"""Checks vertical alignment of key points across masters.
-	Scans for points within the zone threshold around each vertical metric.
+	""" Checks vertical alignment of key points across masters.
+		Scans for points within the zone threshold around each vertical metric.
 	"""
 
 	def details(self):
@@ -30,6 +30,7 @@ class Script(QATask):
 		return array[idx]
 	
 	def set_metrics(self, master):
+		"""Defines reference points from control glyphs, such as H, O, h, p, u."""
 
 		def ref_bounds(ref):
 			glyph = self.glyphs[ref].layers[master.id]
