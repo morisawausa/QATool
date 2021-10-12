@@ -16,6 +16,7 @@ class OCC_QATaskListView():
 		self.task_view = OCC_QATaskView()
 		self.selected_task_name = None
 		self.selected_task = None
+		self.master_ids = []
 		self.master_queue = {}
 		self.render()
 		# Test()
@@ -23,7 +24,7 @@ class OCC_QATaskListView():
 	def render(self):
 		"""draw entire application"""
 		padding = 15
-		self.w = Window((600, 700), "Occupant QA", minSize=(450, 700), maxSize=None,)
+		self.w = Window((600, 800), "Occupant QA", minSize=(450, 700), maxSize=None,)
 
 		# setup tasks to display in the list view per the task order
 		self.items = list()
@@ -44,7 +45,7 @@ class OCC_QATaskListView():
 			editCallback=self.toggle,
 			allowsMultipleSelection=False)
 
-		detail_height = 150
+		detail_height = 120
 		# set up detail view
 		self.w.details = Box((padding, list_height+padding, -padding, detail_height), u"Details")
 		self.w.details.text = TextBox((5, 5, -5, -5), "Test Details Placeholder")
@@ -65,30 +66,30 @@ class OCC_QATaskListView():
 		# self.w.params.param2.input = EditText((0, 0, 100, -0), callback=self.create_param_callback(2))
 		# self.w.params.param2.label = TextBox((102, 3, -0, -0), "Parameter")
 
-
-		# set up master (maximum 9)
-		self.w.masters = Box((padding, list_height+detail_height+box_height+padding*3, -padding, box_height), "Masters")
-		self.w.masters.checkbox = CheckBox((5, 10, 120, 20), "All Masters", callback=self.master_all_callback, value=True)
-
-		columns = (140, 280, 420)
-		rows = (10,30,50)
-		x = 0
+		master_height = 230
+		# set up masters to display in list
+		self.master_list = list()
 
 		for i, master in enumerate(Glyphs.font.masters):
-			self.master_queue[master.id] = 1;
+			self.master_ids.append(master.id) #append to list of master ids
+			self.master_queue[master.id] = 0  #store id in master queue that feeds into profile
 
-			# assign columns
-			if i<3:
-				x = 0
-			elif i<6:
-				x = 1
-			else:
-				x = 2
+			self.master_list.append({'Active': False, 'Master': master.name, 'Id': master.id})
 
-			attrName = "checkbox%s" %i 
-			checkbox = CheckBox((columns[x], rows[i%3], -10, 20), master.name, callback=self.create_master_callback(master.id), value=True)			
-			setattr(self.w.masters, attrName, checkbox)
+		masterListHeader = [
+			{"title": "Active", "cell": CheckBoxListCell(title=None), "width": 40},
+			{"title": "Master", "editable": False, "resizable": False},
+			{"title": "Id", "editable": False, "width": 0},
+		] #Id is a hidden column
 
+		self.w.masterSelection = List( (padding, list_height+detail_height+box_height+padding*3, -padding, master_height), 
+			items=self.master_list, 
+			columnDescriptions=masterListHeader, 
+			editCallback=self.activate_master,
+			allowsMultipleSelection=True)
+
+		# self.w.masters = Box((padding, list_height+detail_height+box_height+padding*3, -padding, box_height), "Masters")
+		# self.w.masters.checkbox = CheckBox((5, 10, 120, 20), 
 
 		# set up note clearing buttons	
 		self.w.clearNotesButton = Button((padding, -90, 280, 20), u"Clear all notes", callback=self.clear_notes)
@@ -173,35 +174,20 @@ class OCC_QATaskListView():
 			param.show(True)
 			param.input.set(p[1])
 			param.label.set(p[0])
+		
 
+	def activate_master(self, sender):
+		"""given a checkbox selection within list of masters,
+		 activates master to load into QA profile queue"""
+		updatedList = self.w.masterSelection.get()
 
-	def create_master_callback(self, key):
-		"""given a master id, stores whether it is active
-		in self.master_queue."""
-		master_id = key
-		def master_callback(sender):
-			self.master_queue[master_id] = sender.get()
-			if sender.get()==0:
-				self.w.masters.checkbox.set(False)
-		return master_callback
-
-
-	def master_all_callback(self, sender):
-		#toggle all masters
-		# print sender.get()
-		if sender.get()==1:
-			for i, master in enumerate(Glyphs.font.masters):
-				checkbox_id = "checkbox%s" %i
-				checkbox = getattr(self.w.masters, checkbox_id)
-				checkbox.set(True)
-				self.master_queue[master.id] = 1
-		else:
-			for i, master in enumerate(Glyphs.font.masters):
-				checkbox_id = "checkbox%s" %i
-				checkbox = getattr(self.w.masters, checkbox_id)
-				checkbox.set(False)
-				self.master_queue[master.id] = 0
-		pass
+		for item in updatedList:
+			if item['Active'] == True:
+				#checkbox selected
+				self.master_queue[item['Id']] = 1 #activate master id
+			else:
+				#checkbox not selected
+				self.master_queue[item['Id']] = 0 #activate master id
 
 
 	def clear_note(self, sender):
