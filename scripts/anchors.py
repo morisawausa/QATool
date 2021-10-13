@@ -118,13 +118,14 @@ class Script(QATask):
 				else:
 					self.report.note("*'A' does not have a top anchor and cannot be used as an Uppercase reference")
 
-			if sc_accent not in self.glyphs:
-				self.report.note("(Reference for smallcaps accent y position is the top anchor on a.sc, since .sc accents don't exist)")
-				scanchor = self.glyphs['a.sc'].layers[master.id].anchors['top']
-				if scanchor:
-					reference[self.sc_key] = scanchor.position
-				else:
-					self.report.note("*'a.sc' does not have a top anchor and cannot be used as a Smallcaps reference")
+			if ( self.glyphs["a.sc"] is not None):
+				if sc_accent not in self.glyphs:
+					self.report.note("(Reference for smallcaps accent y position is the top anchor on a.sc, since .sc accents don't exist)")
+					scanchor = self.glyphs['a.sc'].layers[master.id].anchors['top']
+					if scanchor:
+						reference[self.sc_key] = scanchor.position
+					else:
+						self.report.note("*'a.sc' does not have a top anchor and cannot be used as a Smallcaps reference")
 
 		else:
 			self.report.note("* Reference glyph does not exist in the font")
