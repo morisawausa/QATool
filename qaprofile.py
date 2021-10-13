@@ -137,7 +137,7 @@ class QAProfile():
 		print "%s tests run\n" %self.testCount
 
 		output = u""
-
+		print (self.all_errors)
 		if self.all_notes or self.all_errors:
 
 			output += u"\n\n⚙️ REFERENCE ⚙️\n++++++++++++++++++++++++\n\n"
@@ -168,6 +168,8 @@ class QAProfile():
 							else:
 								errorGlyphs[key] = list()
 								errorGlyphs[key].append(line)
+
+					print (errorGlyphs)
 
 					for e in errorGlyphs:
 						output += '\n\n%s\n------------\n' %e

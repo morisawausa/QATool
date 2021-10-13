@@ -68,13 +68,13 @@ class OCC_QATaskListView():
 
 		master_height = 230
 		# set up masters to display in list
-		self.master_list = list()
+		self.master_rows = list()
 
 		for i, master in enumerate(Glyphs.font.masters):
 			self.master_ids.append(master.id) #append to list of master ids
 			self.master_queue[master.id] = 0  #store id in master queue that feeds into profile
 
-			self.master_list.append({'Active': False, 'Master': master.name, 'Id': master.id})
+			self.master_rows.append({'Active': False, 'Master': master.name, 'Id': master.id})
 
 		masterListHeader = [
 			{"title": "Active", "cell": CheckBoxListCell(title=None), "width": 40},
@@ -83,7 +83,7 @@ class OCC_QATaskListView():
 		] #Id is a hidden column
 
 		self.w.masterSelection = List( (padding, list_height+detail_height+box_height+padding*3, -padding, master_height), 
-			items=self.master_list, 
+			items=self.master_rows, 
 			columnDescriptions=masterListHeader, 
 			editCallback=self.activate_master,
 			allowsMultipleSelection=True)
