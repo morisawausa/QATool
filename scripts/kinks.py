@@ -2,7 +2,7 @@
 from GlyphsApp import *
 from vanilla import *
 
-from abstracts.task import QATask
+from .abstracts.task import QATask
 
 from math import atan2, sqrt, degrees, pi
 from AppKit import NSPoint

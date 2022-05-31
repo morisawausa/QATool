@@ -194,7 +194,7 @@ class OCC_QATaskListView():
 		"""clears notes on selected glyph"""
 		layer = Glyphs.font.selectedLayers[0]
 		layer.annotations = None
-		print u"Notes on %s[%s] removed ✨" %(layer.parent.name, layer.name)
+		print("Notes on %s[%s] removed ✨" %(layer.parent.name, layer.name))
 
 
 	def clear_notes(self, sender):
@@ -202,7 +202,7 @@ class OCC_QATaskListView():
 		for g in Glyphs.font.glyphs:
 			for layer in g.layers:
 				layer.annotations = None
-		print u"All notes removed ✨✨✨"
+		print("All notes removed ✨✨✨")
 
 		
 

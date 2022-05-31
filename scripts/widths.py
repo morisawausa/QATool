@@ -2,8 +2,7 @@
 from GlyphsApp import *
 from vanilla import *
 
-from abstracts.task import QATask
-
+from .abstracts.task import QATask
 
 class Script(QATask):
 	"""

@@ -120,9 +120,9 @@ class QAProfile():
 
 		
 		if self.testCount == 0:
-			print "\n\n⚠️ No tests selected"
+			print("\n\n⚠️ No tests selected")
 		if len(self.master_list) == 0:
-			print "\n\n⚠️ No masters selected"
+			print("\n\n⚠️ No masters selected")
 		else:
 			# output results
 			self.report_all()
@@ -130,11 +130,12 @@ class QAProfile():
 
 	def report_all(self):
 		"""generate final report"""
-		master_list =[]
+		master_list = []
 		for GS_master in self.font.masters:
 			master_list.append(GS_master.name)
 
-		print "%s tests run\n" %self.testCount
+		print(self.font.masters, master_list)
+		# print("%s tests run\n" %self.testCount)
 
 		output = u""
 
@@ -210,7 +211,7 @@ class QAProfile():
 			elif not self.all_notes:
 				output += u"👏 ALL GOOD 👏"
 		
-		print output
+		print(output)
 		
 
 

@@ -2,9 +2,7 @@
 from GlyphsApp import *
 from vanilla import *
 
-from abstracts.task import QATask
-
-import numpy as np
+from .abstracts.task import QATask
 
 class Script(QATask):
 	""" Checks vertical alignment of key points across masters.
@@ -25,9 +23,12 @@ class Script(QATask):
 		]
 
 	def find_nearest(self, array, value):
-		array = np.asarray(array)
-		idx = (np.abs(array - value)).argmin()
-		return array[idx]
+	    return array[ min(range(len(array)), key = lambda i: abs(array[i]-value)) ]
+	      
+	# def find_nearest(self, array, value):
+	# 	array = np.asarray(array)
+	# 	idx = (np.abs(array - value)).argmin()
+	# 	return array[idx]
 	
 	def set_metrics(self, master):
 		"""Defines reference points from control glyphs, such as H, O, h, p, u."""

@@ -3,7 +3,7 @@ import objc
 from GlyphsApp import *
 from vanilla import *
 
-from report import QAReport
+from .report import QAReport
 
 class QATask():
 

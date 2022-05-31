@@ -2,7 +2,7 @@
 from GlyphsApp import *
 from vanilla import *
 
-from abstracts.task import QATask
+from .abstracts.task import QATask
 
 
 class Script(QATask):
@@ -44,7 +44,7 @@ class Script(QATask):
 		errors = ""
 		for category in metrics:
 			reference += "%s = %s\n\n" %(category, ', '.join(map(str, metrics[category])) )
-			if category is not "x_height":
+			if category != "x_height":
 				for i, metric in enumerate(metrics[category]):
 					if metric != metrics[category][0]:
 						master = self.masters[i]

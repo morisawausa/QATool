@@ -2,7 +2,7 @@
 from GlyphsApp import *
 from vanilla import *
 
-from abstracts.task import QATask
+from .abstracts.task import QATask
 
 
 class Script(QATask):
@@ -71,7 +71,7 @@ class Script(QATask):
 			# compose component names
 			if component.name == "idotless":
 				composed_name += "i"
-				print composed_name
+				print(composed_name)
 			elif component.name == "jdotless":
 				composed_name += "j"
 			elif "comb.case" in component.name:
