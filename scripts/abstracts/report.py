@@ -19,8 +19,8 @@ class QAReport( ):
 	def add(self, master, glyph, header, desc, passed):
 		"""Adds line of a single test result to report.
 		"""
-		glyphName = glyph.encode('utf-8')
-		masterName = master.encode('utf-8')
+		glyphName = glyph
+		masterName = master
 
 		result = {'glyph': glyphName, 'header': header, 'desc': desc, 'pass': passed }
 		

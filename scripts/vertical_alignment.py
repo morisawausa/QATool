@@ -11,7 +11,7 @@ class Script(QATask):
 
 	def details(self):
 		return {
-			"name": u"Vertical metrics",
+			"name": u"Vertical alignment",
 			"version": "1.2.0",
 			"description": u"Checks if any point falls within the ⚙️Zone threshold (3pts by default.) Uses the following glyphs for reference: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o). If small caps exists, also checks small cap capheight (H.sc)"
 			}
@@ -23,23 +23,22 @@ class Script(QATask):
 		]
 
 	def find_nearest(self, array, value):
-	    return array[ min(range(len(array)), key = lambda i: abs(array[i]-value)) ]
-	      
-	# def find_nearest(self, array, value):
-	# 	array = np.asarray(array)
-	# 	idx = (np.abs(array - value)).argmin()
-	# 	return array[idx]
-	
+		"""Returns the item nearest to the given value within the array"""
+		return array[ min( range(len(array)), key = lambda i: abs(array[i]-value) ) ]
+
 	def set_metrics(self, master):
 		"""Defines reference points from control glyphs, such as H, O, h, p, u."""
 
 		def ref_bounds(ref):
-			glyph = self.glyphs[ref].layers[master.id]
+			reference_glyph = self.glyphs[ref]
 			bounds = []
-
-			bounds.append(glyph.bounds.origin.y) #minimum point
-			bounds.append(glyph.bounds.origin.y + glyph.bounds.size.height) #max point
-
+			if reference_glyph:
+				glyph = reference_glyph.layers[master.id]
+				bounds.append(glyph.bounds.origin.y) #minimum point
+				bounds.append(glyph.bounds.origin.y + glyph.bounds.size.height) #max point
+			else:
+				print("\n⚠️ Reference glyph %s does not exist\n" %ref)
+				bounds = [0,0]
 			return bounds
 
 		metrics_dict = {
@@ -77,8 +76,9 @@ class Script(QATask):
 					for node in path.nodes:
 						if node.type == 'line' or node.type == 'curve':
 							if node.y not in metrics.values():
-								nearest = self.find_nearest(metrics.values(), node.y) # returns metrics nearest to node
+								nearest = self.find_nearest(list(metrics.values()), node.y) # returns metrics nearest to node
 								diff = node.y - nearest
+								metric_name = [k for k,v in metrics.items() if v == nearest]
 								if (abs(diff) < padding):
-									report.add(m.name, g.name, 'Vertical metrics', "%s is off of the %s by %i" %( report.node(node), metrics.keys()[metrics.values().index(nearest)], diff), passed=False)
+									report.add(m.name, g.name, 'Vertical metrics', "%s is off of the %s by %i" %( report.node(node), metric_name, diff), passed=False)
 

@@ -123,7 +123,7 @@ class OCC_QATaskListView():
 			try:
 				param_input = int(param_input)
 			except ValueError:
-				param_input = param_input.encode('utf-8')
+				param_input = param_input
 
 			# save entered params to profile
 			profile.load_params(self.selected_task_name, param_index, param_input)

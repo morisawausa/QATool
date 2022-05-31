@@ -1,7 +1,7 @@
 Symmetric sidebearings
 Almost straights
 Kinks
-Vertical metrics
+Vertical alignment
 Top anchor alignment
 Components
 Fixed widths

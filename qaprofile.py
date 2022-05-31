@@ -106,6 +106,7 @@ class QAProfile():
 				# store test results on task profile
 				results = run[0]
 				task_info['Results'] = results
+				# print(results)
 
 				# collect notes
 				self.all_notes.append( run[1] )
@@ -130,11 +131,13 @@ class QAProfile():
 
 	def report_all(self):
 		"""generate final report"""
+		print("test")
 		master_list = []
+
 		for GS_master in self.font.masters:
 			master_list.append(GS_master.name)
-
-		print(self.font.masters, master_list)
+		print(master_list)
+		
 		# print("%s tests run\n" %self.testCount)
 
 		output = u""
@@ -149,7 +152,7 @@ class QAProfile():
 					output += line + "\n"
 
 			if self.all_errors:
-				output += u"\n\n👉 TEST RESULTS 👈\n++++++++++++++++++++++++\n\n"	
+				output += u"\n👉 TEST RESULTS 👈\n++++++++++++++++++++++++\n\n"	
 
 				# output all errors by master
 				for master in self.all_errors:
@@ -203,7 +206,7 @@ class QAProfile():
 							
 					
 					# output error glyphs in new tab
-					tab_text = "/" + "/".join(errorGlyphs.keys()).decode('utf-8')
+					tab_text = "/" + "/".join(errorGlyphs.keys())
 					
 					# open new tab with master selected
 					if tab_text != "/":
