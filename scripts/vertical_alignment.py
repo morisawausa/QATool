@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+	# -*- coding: utf-8 -*-
 from GlyphsApp import *
 from vanilla import *
 
@@ -13,7 +13,7 @@ class Script(QATask):
 		return {
 			"name": u"Vertical alignment",
 			"version": "1.2.0",
-			"description": u"Checks if any point falls within the ⚙️Zone threshold (3pts by default.) Uses the following glyphs for reference: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o). If small caps exists, also checks small cap capheight (H.sc)"
+			"description": u"Checks if any point falls within the ⚙️Zone threshold. Uses the following references: baseline (H), baseline overshoot (O), ascender (h), descender (p), capheight (H), capheight overshoot (O), xheight (u), xheight overshoot (o). Also checks smallcap height (H.sc) if applicable."
 			}
 
 

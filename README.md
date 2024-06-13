@@ -1,6 +1,12 @@
-# _OccQATool
-This repository holds the Occupant Fonts QA Tool for the Glyphs application. It serves as a way to manage the QA items agreed upon by the team and as an interface to run the relevant scripts.
-> Note: The QA Tool only reports on items — it will never change anything in your font file. For scripts to assist in glyphs manipulation, access the [_GlyphsScripts](https://github.com/morisawausa/_GlyphsScripts) repository.
+# QA Tool Suite
+This repository holds the QA Tool Suite for the Glyphs application. It serves as a way to manage the quality assurance items agreed upon by the team and as an interface to run the relevant scripts. It is intended to check for consistency in the drawing of the font, surfacing issues that are best addressed directly within the application. For QA of technical standards, we recommend using Terminal-based tools such as [font bakery](https://github.com/fonttools/fontbakery). 
+
+This is essentially a UI framework for organizing and running scripts for quality assurance checks. These are often specific to the project and foundry, so the tool would work best if you developed your own python scripts to include in the suite. 
+Glyphs has great tutorials on [getting started with scripting](https://glyphsapp.com/learn/scripting-glyphs-part-1).
+
+> Note: The QA Tool is for detection, not fixing: it will only report on issues and will never change anything in your font file. If you find that there is a pattern of issues you may want to address programmatically, you will need to write separate scripts for them.
+
+(This tool is currently structured as something that can be installed within the `Glyphs Scripts` folder, with the intention that writing test scripts will be easier if you can easily `Reload Scripts` to update the Suite. With the latest versions of Glyphs however, it looks like this is no longer the case, and you may need to restart Glyphs to reflect edits to your QA tests.)
 
 ## Getting Started
 
@@ -11,20 +17,22 @@ Usually, the path to your Glyphs scripts folder is:
 `/Users/*yourusername*/Library/Application\ Support/Glyphs/Scripts`
 
 ## Usage
-![Screenshot of QA Tool](QATool_screenshot.png)
+![Screenshot of QA Tool](QAwindows.png)
+
 > You should have a font file open before launching the tool. For now, relaunch your tool when running for a different font (in order to load the correct default parameters)
 
 1. Select the font to run QA. It will only run on the selected font.
-2. Launch the QA Tool via `Script > OccQATool > Occupant QA`
+2. Launch the QA Tool via `Script > QATool > Test Suite`
 3. Select a test or multiple tests from the list
 4. Verify the default parameters or enter in your own
-5. Hit *Run Selected Tests*
+5. Hit *Run Selected Tests*. Problematic glyphs will be raised in the Macro Panel. For each master, a new tab will open with glyphs annotated with issues as well.
 
 ## The Report 
 There are two types of outputs for the QA Report: **Notes** and **Results**.
 
 ### Notes
-All notes will be displayed first under REFERENCE.
+All notes will be displayed first under REFERENCE. Notes are useful for printing out the parameters used for running tests, or for references across multiple masters.
+
 ```
 REFERENCE
 ++++++++++++++++++++++++
@@ -52,11 +60,31 @@ Glyph Name
 ...
 ```
 
+## Supporting Scripts + Keyboard Shortcuts
+
+Because the QA Tool opens a tab with glyphs that have issues, it’s useful to have the [Edit Next/Previous Glyph](https://github.com/justanotherfoundry/freemix-glyphsapp) scripts by Tim Ahrens installed with keyboard shortcuts assigned.
+
+The tool has a button to clear QA annotations applied on each glyph, but it’s probably nicer to have a shortcut to it too.
+Here’s a script you can install in your scripts folder for clearing a note on the current layer.
+
+```python
+#MenuTitle: Delete Annotations on Current Layer
+# -*- coding: utf-8 -*-
+__doc__="""
+Removes annotations applied on the currently selected layer
+"""
+
+layer = Glyphs.font.selectedLayers[0]
+layer.annotations = None
+print(u"Notes on %s[%s] removed ✨" % (layer.parent.name, layer.name))
+```
+
+Then, you can go through the Edit View, cycling through each glyph, addressing any issues and removing annotations as you go.
+
 ## The Tests
 
 ### Structure
-All tests inherits the constructor `scripts > abstracts > task.py`. The test *must* follow this template to execute properly from the tool.
-If no parameters exist for the test, return an empty list `[]`.
+All tests inherits the constructor `scripts > abstracts > task.py`. The test must follow this template to execute properly from the tool. If no parameters exist for the test, return an empty list `[]`.
 
 ```python
 # -*- coding: utf-8 -*-
@@ -91,7 +119,6 @@ class Script(QATask):
 				report.add(m.name, g.name, 'Heading', 'Description', passed=False)
 
 ```
-
 
 
 ### Test Objects
@@ -147,8 +174,6 @@ report.add(m.name, g.name, 'Overkerns', 'Positive kerning', passed=False)
 [Overkerns] Positive kerning
 ```
 
-
-
 ### Helper: Format a Point
 **report.node**(GSnode)
 
@@ -178,7 +203,7 @@ Additional tests can be added by:
 
 
 ### Tool Updates
-All feature requests and issues of the tool itself are handled in [Github issues](https://github.com/morisawausa/OccQATool/issues).
+All feature requests and issues of the tool itself are handled in [Github issues](https://github.com/morisawausa/QATool/issues).
 Please tag each issue with relevant labels and with the [QA Tool Updates](https://github.com/morisawausa/OccQATool/projects/1) project. This is where issues will be tracked for futher versions of the tool.
 
 

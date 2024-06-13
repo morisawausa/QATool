@@ -2,12 +2,8 @@
 
 from GlyphsApp import *
 from vanilla import *
-# from vanilla.test.testAll import Test
-
 from qaprofile import QAProfile
 from taskview import OCC_QATaskView
-
-
 
 class OCC_QATaskListView():
 
@@ -19,12 +15,11 @@ class OCC_QATaskListView():
 		self.master_ids = []
 		self.master_queue = {}
 		self.render()
-		# Test()
 
 	def render(self):
 		"""draw entire application"""
 		padding = 15
-		self.w = Window((600, 800), "Occupant QA", minSize=(450, 700), maxSize=None,)
+		self.w = Window((600, 800), "Test Suite", minSize=(600, 700), maxSize=None,)
 
 		# setup tasks to display in the list view per the task order
 		self.items = list()
@@ -203,7 +198,6 @@ class OCC_QATaskListView():
 			for layer in g.layers:
 				layer.annotations = None
 		print("All notes removed ✨✨✨")
-
 		
 
 	def run_profile(self, sender):

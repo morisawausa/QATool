@@ -18,7 +18,7 @@ class Script(QATask):
 		return {
 			"name": u"Fixed widths",
 			"version": "1.0.0",
-			"description": u"Checks glyphs that have fixed widths: combining accents, legacy accents, tabular glyphs, and spacing glyphs."
+			"description": u"Checks glyphs that have fixed widths: tabular glyphs and spacing glyphs."
 			}
 
 

@@ -13,7 +13,7 @@ class Script(QATask):
 		return {
 			"name": u"Symmetric sidebearings",
 			"version": "1.0.0",
-			"description": u"Checks whether left and right sidebearings are equivalent for the glyphs that are usually symmetric"
+			"description": u"Checks whether left and right sidebearings are equivalent for the glyphs that are usually symmetric."
 			}
 
 

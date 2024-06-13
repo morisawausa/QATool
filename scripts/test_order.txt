@@ -1,9 +1,7 @@
-Symmetric sidebearings
+Character set
 Almost straights
-Kinks
 Vertical alignment
-Top anchor alignment
+Symmetric sidebearings
 Components
 Fixed widths
 Global metrics
-OCC character set
